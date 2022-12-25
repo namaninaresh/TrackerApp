@@ -1,8 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Onboarding from "./components/Onboarding";
+import Register from "./components/Register";
 export default function App() {
-  return <Onboarding />;
+  return <Register />;
 }
 
 const styles = StyleSheet.create({

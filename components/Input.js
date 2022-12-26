@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Text, TextInput, View, StyleSheet } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import colors from "../theme/colors";
 
 const Input = ({
   label,
@@ -14,14 +15,21 @@ const Input = ({
   const [hidePassword, setHidePassword] = useState(password);
   return (
     <View style={{ marginBottom: 20 }}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <View
         style={[
           styles.inputContainer,
           { borderColor: error ? "red" : isFocused ? "blue" : "#E0E0E0" },
         ]}
       >
-        <Icon name={iconName} style={{ fontSize: 22, paddingHorizontal: 10 }} />
+        <Icon
+          name={iconName}
+          style={{
+            fontSize: 22,
+            paddingHorizontal: 10,
+            color: colors.lightDark,
+          }}
+        />
         <TextInput
           secureTextEntry={hidePassword}
           autoCorrect={false}
@@ -38,12 +46,20 @@ const Input = ({
         {password && (
           <Icon
             name={hidePassword ? "eye-outline" : "eye-off-outline"}
-            style={{ fontSize: 22, paddingHorizontal: 10 }}
+            style={{
+              fontSize: 22,
+              paddingHorizontal: 10,
+              color: colors.lightDark,
+            }}
             onPress={() => setHidePassword(!hidePassword)}
           />
         )}
       </View>
-      {error && <Text style={{ color: "red", marginTop: 7 }}>{error}</Text>}
+      {error && (
+        <Text style={{ color: colors.pink, paddingLeft: 15, marginTop: 7 }}>
+          {error}
+        </Text>
+      )}
     </View>
   );
 };
@@ -55,8 +71,9 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     height: 55,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: colors.light,
     flexDirection: "row",
+    borderRadius: 15,
     borderWidth: 0.2,
     alignItems: "center",
   },

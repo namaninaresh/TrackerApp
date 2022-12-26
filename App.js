@@ -1,16 +1,17 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import Onboarding from "./components/Onboarding";
-import Register from "./components/Register";
-export default function App() {
-  return <Register />;
-}
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+import { NavigationContainer } from "@react-navigation/native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import BottomTabNavigator from "./components/Navigation/TabNavigator";
+import DrawerNavigator from "./components/Navigation/DrawerNavigator";
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <DrawerNavigator />
+      </NavigationContainer>
+    </SafeAreaProvider>
+  );
+}

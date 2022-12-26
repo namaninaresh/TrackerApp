@@ -1,20 +1,15 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Keyboard,
-  Alert,
-} from "react-native";
-import { size, weight } from "../theme/fonts";
+import { Text, View, ScrollView, Keyboard, Alert } from "react-native";
+import { size, weight } from "../../theme/fonts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Input from "./Input";
-import Button from "./Button";
+import Input from "../Input";
+import Button from "../Button";
 import { useState } from "react";
-import Loader from "./Loader";
+import Loader from "../Loader";
+import colors from "../../theme/colors";
+import metrics from "../../theme/metrics";
 export default function Register() {
   const [inputs, setInputs] = useState({
+    fullname: "",
     email: "",
     password: "",
   });
@@ -23,14 +18,18 @@ export default function Register() {
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
+    if (!inputs.fullname) {
+      handleError("Please enter full name", "fullname");
+      valid = false;
+    }
     if (!inputs.email) {
       handleError("Please enter email", "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please enter valid Email", "email");
+      handleError("Please enter valid email", "email");
     }
     if (!inputs.password) {
-      handleError("Please enter Password", "password");
+      handleError("Please enter password", "password");
       valid = false;
     } else if (inputs.password.length < 4) {
       handleError("Min length of password is 4 digits", "password");
@@ -62,19 +61,29 @@ export default function Register() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       <Loader visible={loading} />
       <ScrollView
         contentContainerStyle={{
           paddingTop: 50,
+
+          width: metrics.screenWidth,
+          height: metrics.screenHeight,
           paddingHorizontal: 20,
         }}
       >
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            marginVertical: 50,
+          }}
+        >
           <Text
             style={{
               fontSize: size.font16,
               fontWeight: weight.full,
+              marginVertical: 10,
             }}
           >
             Registration
@@ -86,9 +95,17 @@ export default function Register() {
 
         <View>
           <Input
-            label={"Email"}
+            iconName="account-outline"
+            placeholder="Full name"
+            error={errors.fullname}
+            onFocus={() => {
+              handleError(null, "fullname");
+            }}
+            onChangeText={(text) => handleChange(text, "fulname")}
+          />
+          <Input
             iconName="email-outline"
-            placeholder="Enter your email address"
+            placeholder="Email"
             error={errors.email}
             onFocus={() => {
               handleError(null, "email");
@@ -96,9 +113,8 @@ export default function Register() {
             onChangeText={(text) => handleChange(text, "email")}
           />
           <Input
-            label={"Password"}
             iconName="lock-outline"
-            placeholder="Enter your password"
+            placeholder="Password"
             password
             error={errors.password}
             onFocus={() => {
@@ -107,18 +123,50 @@ export default function Register() {
             onChangeText={(text) => handleChange(text, "password")}
           />
         </View>
-        <Button title={"Register"} onPress={validate} />
-        <Text style={{ fontSize: size.font10, textAlign: "center" }}>
+        <Button
+          text="Register"
+          type="primary"
+          bordered
+          size="large"
+          onPress={validate}
+        />
+        <Button
+          text="Google"
+          type="outlined"
+          icon={"google"}
+          bordered
+          buttonStyle={{ borderWidth: 0 }}
+          size="large"
+        />
+        <Button
+          text="Facebook"
+          icon={"facebook"}
+          type="outlined"
+          buttonStyle={{
+            borderWidth: 0,
+          }}
+          bordered
+          size="large"
+        />
+        {/*}  <Button
+          title={"Register"}
+          onPress={validate}
+          backgroundColor={colors.btnColor}
+        />
+        <Text>or Continue with</Text>
+        <Button title={"facebook"} icon="google" onPress={validate} />
+        <Button title={"Google"} icon="google" onPress={validate} /> */}
+        <Text
+          style={{
+            fontSize: size.font10,
+            textAlign: "center",
+            fontWeight: weight.full,
+            marginVertical: 10,
+          }}
+        >
           Aready have account ? Login
         </Text>
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});

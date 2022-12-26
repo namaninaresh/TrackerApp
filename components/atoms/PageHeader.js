@@ -12,7 +12,6 @@ function HeaderLeft({ navigation }) {
 }
 
 export default function PageHeader({ navigation, props, name }) {
-  console.log("pr", props);
   return (
     <View style={{ flexDirection: "row", marginRight: 15 }}>
       <View style={{ justifyContent: "center" }}></View>

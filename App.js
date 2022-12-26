@@ -5,13 +5,13 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import BottomTabNavigator from "./components/Navigation/TabNavigator";
 import DrawerNavigator from "./components/Navigation/DrawerNavigator";
+import UserRegistration from "./components/Screens/UserRegistration";
+import Register from "./components/Screens/RegisterScreen";
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <DrawerNavigator />
-      </NavigationContainer>
+      <NavigationContainer>{<DrawerNavigator />}</NavigationContainer>
     </SafeAreaProvider>
   );
 }

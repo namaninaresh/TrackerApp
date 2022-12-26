@@ -7,6 +7,8 @@ import Contact from "../Screens/TaskScreen";
 import colors from "../../theme/colors";
 import PageHeader from "../atoms/PageHeader";
 import { Text } from "react-native";
+import UserRegistration from "../Screens/UserRegistration";
+import FadeInRightExample from "../Screens/FadeInRightExample";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +44,33 @@ const MainStackNavigator = () => {
             // headerLeft: () => <HeaderLeft navigation={navigation} />,
             headerTitle: (props) => (
               <PageHeader navigation={navigation} props={props} name="About" />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+      <Stack.Screen
+        name="user"
+        component={UserRegistration}
+        options={({ navigation }) => {
+          return {
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader navigation={navigation} props={props} name="User" />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+
+      <Stack.Screen
+        name="Fade"
+        component={FadeInRightExample}
+        options={({ navigation }) => {
+          return {
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader navigation={navigation} props={props} name="Fade" />
             ),
             //headerRight: () => <HeaderRight navigation={navigation} />,
           };

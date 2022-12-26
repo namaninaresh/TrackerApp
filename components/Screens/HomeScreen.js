@@ -11,7 +11,7 @@ export default function HomeScreen({ navigation }) {
       <Text>Home Screen</Text>
       <Button
         title="Go to About Screen"
-        onPress={() => navigation.navigate("About")} // We added an onPress event which would navigate to the About screen
+        onPress={() => navigation.navigate("user")} // We added an onPress event which would navigate to the About screen
       />
     </Layout>
   );

@@ -3,12 +3,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Home from "../Screens/HomeScreen";
 import About from "../Screens/AboutScreen";
-import Contact from "../Screens/TaskScreen";
+import TaskScreen from "../Screens/TaskScreen";
 import colors from "../../theme/colors";
 import PageHeader from "../atoms/PageHeader";
 import { Text } from "react-native";
 import UserRegistration from "../Screens/UserRegistration";
 import FadeInRightExample from "../Screens/FadeInRightExample";
+import NavigationDrawerHeader from "./NavigationDrawerHeader";
+import BudgetScreen from "../Screens/BudgetScreen";
+import WaterScreen from "../Screens/WaterScreen";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +31,9 @@ const MainStackNavigator = () => {
         component={Home}
         options={({ navigation }) => {
           return {
+            headerLeft: () => (
+              <NavigationDrawerHeader navigationProps={navigation} />
+            ),
             // headerLeft: () => <HeaderLeft navigation={navigation} />,
             headerTitle: (props) => (
               <PageHeader navigation={navigation} props={props} name="Home" />
@@ -80,12 +86,79 @@ const MainStackNavigator = () => {
   );
 };
 
-const ContactStackNavigator = () => {
+const TasksStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Contact" component={Contact} />
+      <Stack.Screen
+        name="Tasks"
+        component={TaskScreen}
+        options={({ navigation }) => {
+          return {
+            headerLeft: () => (
+              <NavigationDrawerHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader navigation={navigation} props={props} name="Task" />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
     </Stack.Navigator>
   );
 };
-
-export { MainStackNavigator, ContactStackNavigator };
+const BudgetStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="Budget"
+        component={BudgetScreen}
+        options={({ navigation }) => {
+          return {
+            headerLeft: () => (
+              <NavigationDrawerHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader
+                navigation={navigation}
+                props={props}
+                name="Finance"
+              />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+const WaterStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="Water"
+        component={WaterScreen}
+        options={({ navigation }) => {
+          return {
+            headerLeft: () => (
+              <NavigationDrawerHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader navigation={navigation} props={props} name="Water" />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+export {
+  MainStackNavigator,
+  TasksStackNavigator,
+  BudgetStackNavigator,
+  WaterStackNavigator,
+};

@@ -13,7 +13,12 @@ function HeaderLeft({ navigation }) {
 
 export default function PageHeader({ navigation, props, name }) {
   return (
-    <View style={{ flexDirection: "row", marginRight: 15 }}>
+    <View
+      style={{
+        flexDirection: "row",
+        marginRight: 15,
+      }}
+    >
       <View style={{ justifyContent: "center" }}></View>
 
       <View style={{ justifyContent: "center", padding: 5 }}>

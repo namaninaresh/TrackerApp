@@ -18,6 +18,8 @@ const colors = {
   bldark7: "#90e0ef",
   bldark8: "#ade8f4",
   bldark9: "#caf0f8",
+  blLight0: "#8cbbf1",
+
   ash0: "#f8f9fa",
   ash1: "#e9ecef",
   ash2: "#dee2e6",
@@ -34,6 +36,12 @@ const colors = {
   black: "#040415",
   orange: "#F15223",
   purple: "#5041AB",
+  mintGreen: "#3EB489",
+  lightGreen: "#9de47c",
+  lightRed: "#f56a4d",
+  lightPink: "#f9cedf",
+  lightyellow: "#fceecb",
+  scarletRed: "#FF2400",
 };
 
 export default colors;

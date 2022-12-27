@@ -20,7 +20,7 @@ import colors from "../../theme/colors";
 import metrics from "../../theme/metrics";
 import { size, weight } from "../../theme/fonts";
 
-export default function Register() {
+export default function Register({ navigation }) {
   const [inputs, setInputs] = useState({
     fullname: "",
     email: "",
@@ -467,6 +467,7 @@ export default function Register() {
             fontWeight: weight.full,
             marginVertical: 10,
           }}
+          onPress={() => navigation.navigate("LoginScreen")}
         >
           Aready have account ? Login
         </Text>

@@ -17,6 +17,15 @@ import Loader from "../Loader";
 import colors from "../../theme/colors";
 import metrics from "../../theme/metrics";
 import { size, weight } from "../../theme/fonts";
+import firebase, { auth, db } from "../../firebase";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Register({ navigation }) {
   const [inputs, setInputs] = useState({
@@ -42,7 +51,6 @@ export default function Register({ navigation }) {
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
-
     if (!inputs.email) {
       handleError("Please enter email", "email");
       valid = false;
@@ -66,7 +74,21 @@ export default function Register({ navigation }) {
       setLoading(false);
 
       try {
+        signInWithEmailAndPassword(auth, inputs.email, inputs.password).then(
+          (response) => {
+            AsyncStorage.setItem(
+              "Auth_Token",
+              response._tokenResponse.refreshToken
+            );
+            /*sessionStorage.setItem(
+              "Auth_Token",
+              response._tokenResponse.refreshToken
+            ); */
+          }
+        );
+
         navigation.replace("DrawerNavigationRoutes");
+
         //AsyncStorage.setItem("user",JSON.stringify(inputs))
         //navigate
       } catch (error) {

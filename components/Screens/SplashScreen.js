@@ -10,6 +10,12 @@ const SplashScreen = ({ navigation }) => {
   const [animating, setAnimating] = useState(true);
 
   useEffect(() => {
+    let authToken = AsyncStorage.getItem("Auth_Token");
+    if (authToken) {
+      navigation.replace("DrawerNavigationRoutes");
+    }
+  });
+  useEffect(() => {
     setTimeout(() => {
       setAnimating(false);
       //Check if user_id is set or not

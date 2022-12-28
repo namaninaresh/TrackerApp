@@ -3,7 +3,7 @@
 import "react-native-gesture-handler";
 
 // Import React and Component
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Import Navigators from React Navigation

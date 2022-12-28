@@ -1,7 +1,3 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React and Component
 import React from "react";
 import { View, Text, Alert, StyleSheet } from "react-native";
 
@@ -11,17 +7,20 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import colors from "../../theme/colors";
-
+import Icon from "@expo/vector-icons/FontAwesome5";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 const CustomSidebarMenu = (props) => {
   return (
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
         <View style={stylesSidebar.profileHeaderPicCircle}>
           <Text style={{ fontSize: 25, color: "#307ecc" }}>
-            {"Naresh Namani".charAt(0)}
+            {"Aaresh Namanis".charAt(0)}
           </Text>
         </View>
-        <Text style={stylesSidebar.profileHeaderText}>AboutReact</Text>
+        <Text style={stylesSidebar.profileHeaderText}>Naresh Namani</Text>
       </View>
       <View style={stylesSidebar.profileHeaderLine} />
 
@@ -29,7 +28,17 @@ const CustomSidebarMenu = (props) => {
         <DrawerItemList {...props} />
         <DrawerItem
           label={({ color }) => (
-            <Text style={{ color: "#d8d8d8" }}>Logout</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Icon
+                name="sign-out-alt"
+                size={20}
+                color={color}
+                style={{ paddingRight: 25 }}
+              />
+              <Text style={{ color: colors.ash6, paddingLeft: 10 }}>
+                Logout
+              </Text>
+            </View>
           )}
           onPress={() => {
             props.navigation.toggleDrawer();
@@ -47,7 +56,13 @@ const CustomSidebarMenu = (props) => {
                   text: "Confirm",
                   onPress: () => {
                     // AsyncStorage.clear();
-                    props.navigation.replace("Auth");
+                    signOut(auth)
+                      .then(() => {
+                        props.navigation.replace("Auth");
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
                   },
                 },
               ],
@@ -56,6 +71,23 @@ const CustomSidebarMenu = (props) => {
           }}
         />
       </DrawerContentScrollView>
+
+      <View
+        style={{
+          flexDirection: "row",
+          position: "absolute",
+          bottom: 40,
+          paddingHorizontal: 20,
+        }}
+      >
+        <Icon
+          name="question-circle"
+          size={20}
+          color={colors.ash8}
+          style={{ paddingRight: 25 }}
+        />
+        <Text style={{ color: colors.ash6, paddingLeft: 10 }}>Help</Text>
+      </View>
     </View>
   );
 };
@@ -67,13 +99,13 @@ const stylesSidebar = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: colors.ash1,
-    paddingTop: 40,
     color: "white",
   },
   profileHeader: {
     flexDirection: "row",
     backgroundColor: "#307ecc",
     padding: 15,
+    paddingTop: 40,
     textAlign: "center",
   },
   profileHeaderPicCircle: {

@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 
-import Input from "../Input";
-import Button from "../Button";
-import Loader from "../Loader";
+import Input from "../atoms/Input";
+import Button from "../atoms/Button";
+import Loader from "../atoms/Loader";
 import metrics from "../../theme/metrics";
 import { size, weight } from "../../theme/fonts";
 import { auth } from "../../firebase";

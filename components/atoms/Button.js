@@ -1,7 +1,7 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Dimensions } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import colors from "../theme/colors";
+import colors from "../../theme/colors";
 
 const Button = ({
   text,

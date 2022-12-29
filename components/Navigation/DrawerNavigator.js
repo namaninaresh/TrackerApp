@@ -1,16 +1,11 @@
 import React from "react";
-
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { FontAwesome5 as Icon, Ionicons } from "@expo/vector-icons";
 
-import { TasksStackNavigator } from "./StackNavigator";
 import TabNavigator from "./TabNavigator";
-import CustomSidebarMenu from "../Screens/CustomSidebarMenu";
-import {
-  FontAwesome5 as Icon,
-  Ionicons,
-  MaterialCommunityIcons as MIcon,
-} from "@expo/vector-icons";
+import CustomSidebarMenu from "./CustomSidebarMenu";
 import SettingsScreen from "../Screens/SettingsScreen";
+
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
@@ -28,9 +23,8 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Profile"
-        component={TasksStackNavigator}
+        component={SettingsScreen}
         options={{
-          headerShown: false,
           drawerIcon: ({ color }) => (
             <Icon name="user-alt" size={20} color={color} />
           ),
@@ -38,9 +32,8 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="All Transacations"
-        component={TasksStackNavigator}
+        component={SettingsScreen}
         options={{
-          headerShown: false,
           drawerIcon: ({ color }) => (
             <Icon name="credit-card" size={20} color={color} />
           ),
@@ -48,9 +41,8 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Statistics"
-        component={TasksStackNavigator}
+        component={SettingsScreen}
         options={{
-          headerShown: false,
           drawerIcon: ({ color }) => (
             <Icon name="chart-line" size={20} color={color} />
           ),
@@ -60,7 +52,6 @@ const DrawerNavigator = () => {
         name="Settings"
         component={SettingsScreen}
         options={{
-          headerShown: false,
           drawerIcon: ({ color }) => (
             <Ionicons name="settings" size={20} color={color} />
           ),

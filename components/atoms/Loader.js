@@ -1,6 +1,6 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import metrics from "../theme/metrics";
+import metrics from "../../theme/metrics";
 const Loader = ({ visible = true }) => {
   return (
     visible && (

@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, ScrollView, Image } from "react-native";
 import { size } from "../../theme/fonts";
-import Button from "../Button";
+import Button from "../atoms/Button";
 import metrics from "../../theme/metrics";
 import colors from "../../theme/colors";
 

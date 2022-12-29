@@ -3,18 +3,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Home from "../Screens/HomeScreen";
 import About from "../Screens/AboutScreen";
-import TaskScreen from "../Screens/TaskScreen";
-import colors from "../../theme/colors";
 import PageHeader from "../atoms/PageHeader";
-import { Text } from "react-native";
 import UserRegistration from "../Screens/UserRegistration";
-import FadeInRightExample from "../Screens/FadeInRightExample";
 import {
   NavigationDrawerHeader,
   NavigationStackHeader,
 } from "./NavigationDrawerHeader";
-import BudgetScreen from "../Screens/BudgetScreen";
-import WaterScreen from "../Screens/WaterScreen";
 import SearchScreen from "../Screens/SearchScreen";
 import ProfileScreen from "../Screens/ProfileScreen";
 import AddTransactionScreen from "../Screens/AddTransaction";
@@ -77,82 +71,10 @@ const MainStackNavigator = () => {
           };
         }}
       />
-
-      <Stack.Screen name="Fade" component={FadeInRightExample} />
     </Stack.Navigator>
   );
 };
 
-const TasksStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen
-        name="Tasks"
-        component={TaskScreen}
-        options={({ navigation }) => {
-          return {
-            headerLeft: () => (
-              <NavigationDrawerHeader navigationProps={navigation} />
-            ),
-            // headerLeft: () => <HeaderLeft navigation={navigation} />,
-            headerTitle: (props) => (
-              <PageHeader navigation={navigation} props={props} name="Task" />
-            ),
-            //headerRight: () => <HeaderRight navigation={navigation} />,
-          };
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-const BudgetStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen
-        name="Budget"
-        component={BudgetScreen}
-        options={({ navigation }) => {
-          return {
-            headerLeft: () => (
-              <NavigationDrawerHeader navigationProps={navigation} />
-            ),
-            // headerLeft: () => <HeaderLeft navigation={navigation} />,
-            headerTitle: (props) => (
-              <PageHeader
-                navigation={navigation}
-                props={props}
-                name="Finance"
-              />
-            ),
-            //headerRight: () => <HeaderRight navigation={navigation} />,
-          };
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-const WaterStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen
-        name="Water"
-        component={WaterScreen}
-        options={({ navigation }) => {
-          return {
-            headerLeft: () => (
-              <NavigationDrawerHeader navigationProps={navigation} />
-            ),
-            // headerLeft: () => <HeaderLeft navigation={navigation} />,
-            headerTitle: (props) => (
-              <PageHeader navigation={navigation} props={props} name="Water" />
-            ),
-            //headerRight: () => <HeaderRight navigation={navigation} />,
-          };
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
 const SearchStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
@@ -167,54 +89,6 @@ const SearchStackNavigator = () => {
             // headerLeft: () => <HeaderLeft navigation={navigation} />,
             headerTitle: (props) => (
               <PageHeader navigation={navigation} props={props} name="Search" />
-            ),
-            //headerRight: () => <HeaderRight navigation={navigation} />,
-          };
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-
-const ProfileStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
-        options={({ navigation }) => {
-          return {
-            headerLeft: () => (
-              <NavigationDrawerHeader navigationProps={navigation} />
-            ),
-            // headerLeft: () => <HeaderLeft navigation={navigation} />,
-            headerTitle: (props) => (
-              <PageHeader
-                navigation={navigation}
-                props={props}
-                name="My Profile"
-              />
-            ),
-            //headerRight: () => <HeaderRight navigation={navigation} />,
-          };
-        }}
-      />
-      <Stack.Screen
-        name="SettingsScreen"
-        component={SettingsScreen}
-        options={({ navigation }) => {
-          return {
-            headerMode: "float",
-            headerLeft: () => (
-              <NavigationStackHeader navigationProps={navigation} />
-            ),
-            // headerLeft: () => <HeaderLeft navigation={navigation} />,
-            headerTitle: (props) => (
-              <PageHeader
-                navigation={navigation}
-                props={props}
-                name="Settings"
-              />
             ),
             //headerRight: () => <HeaderRight navigation={navigation} />,
           };
@@ -275,11 +149,56 @@ const NotificationStackNavigator = () => {
     </Stack.Navigator>
   );
 };
+const ProfileStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={({ navigation }) => {
+          return {
+            headerLeft: () => (
+              <NavigationDrawerHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader
+                navigation={navigation}
+                props={props}
+                name="My Profile"
+              />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+      <Stack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
+        options={({ navigation }) => {
+          return {
+            headerMode: "float",
+            headerLeft: () => (
+              <NavigationStackHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader
+                navigation={navigation}
+                props={props}
+                name="Settings"
+              />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export {
   MainStackNavigator,
-  TasksStackNavigator,
-  BudgetStackNavigator,
-  WaterStackNavigator,
   TransactionStackNavigator,
   SearchStackNavigator,
   ProfileStackNavigator,

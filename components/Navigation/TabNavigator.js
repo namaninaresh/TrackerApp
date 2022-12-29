@@ -1,12 +1,8 @@
 import React, { useRef } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "@expo/vector-icons/FontAwesome5";
-import WelcomeScreen from "../Screens/WelcomeScreen";
 import {
   MainStackNavigator,
-  TasksStackNavigator,
-  BudgetStackNavigator,
-  WaterStackNavigator,
   SearchStackNavigator,
   ProfileStackNavigator,
   TransactionStackNavigator,
@@ -14,18 +10,9 @@ import {
 } from "./StackNavigator";
 import colors from "../../theme/colors";
 import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
-import { Layout } from "../Layout/Layout";
-import metrics from "../../theme/metrics";
 
 const Tab = createBottomTabNavigator();
 
-const EmptyScreen = () => {
-  return (
-    <Layout>
-      <Text>Empyty screen</Text>
-    </Layout>
-  );
-};
 const BottomTabNavigator = () => {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   return (

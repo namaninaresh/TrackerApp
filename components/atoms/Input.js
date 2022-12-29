@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, TextInput, View, StyleSheet } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import colors from "../theme/colors";
+import colors from "../../theme/colors";
 
 const Input = ({
   label,

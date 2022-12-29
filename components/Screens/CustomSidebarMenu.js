@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Alert, StyleSheet } from "react-native";
+import { View, Text, Alert, StyleSheet, Image } from "react-native";
 
 import {
   DrawerContentScrollView,
@@ -11,16 +11,28 @@ import Icon from "@expo/vector-icons/FontAwesome5";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
+import { size } from "../../theme/fonts";
 const CustomSidebarMenu = (props) => {
   return (
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
         <View style={stylesSidebar.profileHeaderPicCircle}>
-          <Text style={{ fontSize: 25, color: "#307ecc" }}>
-            {"Aaresh Namanis".charAt(0)}
+          <Image
+            source={require("../../assets/user.jpg")}
+            style={stylesSidebar.userIcon}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={stylesSidebar.profileHeaderText}>Naresh Namani</Text>
+          <Text style={stylesSidebar.profileHeaderDescription}>
+            lovelychinna799@gmail.com
           </Text>
         </View>
-        <Text style={stylesSidebar.profileHeaderText}>Naresh Namani</Text>
       </View>
       <View style={stylesSidebar.profileHeaderLine} />
 
@@ -101,6 +113,11 @@ const stylesSidebar = StyleSheet.create({
     backgroundColor: colors.ash1,
     color: "white",
   },
+  userIcon: {
+    borderRadius: 50,
+    height: 50,
+    width: 50,
+  },
   profileHeader: {
     flexDirection: "row",
     backgroundColor: "#307ecc",
@@ -113,16 +130,23 @@ const stylesSidebar = StyleSheet.create({
     height: 60,
     borderRadius: 60 / 2,
     color: "white",
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.ash3,
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
   },
   profileHeaderText: {
     color: "white",
-    alignSelf: "center",
+
     paddingHorizontal: 10,
     fontWeight: "bold",
+  },
+  profileHeaderDescription: {
+    color: "white",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    fontWeight: "bold",
+    fontSize: size.font12,
   },
   profileHeaderLine: {
     height: 1,

@@ -1,6 +1,9 @@
 const colors = {
-  primary: "#14B0C9",
-  secondary: "#B4B4B4",
+  primary: "#FF3378",
+  secondary: "#33C9FF",
+  optional: "#41E948",
+  primaryOld: "#14B0C9",
+  secondaryOld: "#B4B4B4",
   light: "#f9fafb",
   lightDark: "#353535",
   btnColor: "#273b95",

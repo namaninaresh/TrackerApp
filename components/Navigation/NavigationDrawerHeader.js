@@ -5,7 +5,8 @@
 import React from "react";
 import { View, Image, TouchableOpacity } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-const NavigationDrawerHeader = (props) => {
+const NavigationDrawerHeader = (props, icon = "menu") => {
+  console.log("navigation Draweer hedae", props);
   const toggleDrawer = () => {
     props.navigationProps.toggleDrawer();
   };
@@ -13,7 +14,7 @@ const NavigationDrawerHeader = (props) => {
   return (
     <View style={{ flexDirection: "row" }}>
       <TouchableOpacity onPress={toggleDrawer}>
-        <Icon name="menu" size={24} style={{ paddingLeft: 20 }} />
+        <Icon name={"menu"} size={24} style={{ paddingLeft: 20 }} />
       </TouchableOpacity>
     </View>
   );

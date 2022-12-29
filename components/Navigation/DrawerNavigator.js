@@ -5,7 +5,12 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { TasksStackNavigator } from "./StackNavigator";
 import TabNavigator from "./TabNavigator";
 import CustomSidebarMenu from "../Screens/CustomSidebarMenu";
-import Icon from "@expo/vector-icons/FontAwesome5";
+import {
+  FontAwesome5 as Icon,
+  Ionicons,
+  MaterialCommunityIcons as MIcon,
+} from "@expo/vector-icons";
+import SettingsScreen from "../Screens/SettingsScreen";
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
@@ -22,7 +27,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="About"
+        name="Profile"
         component={TasksStackNavigator}
         options={{
           headerShown: false,
@@ -32,7 +37,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Finance"
+        name="All Transacations"
         component={TasksStackNavigator}
         options={{
           headerShown: false,
@@ -42,22 +47,22 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Contact"
+        name="Statistics"
         component={TasksStackNavigator}
         options={{
           headerShown: false,
           drawerIcon: ({ color }) => (
-            <Icon name="phone-alt" size={20} color={color} />
+            <Icon name="chart-line" size={20} color={color} />
           ),
         }}
       />
       <Drawer.Screen
-        name="WaterTips"
-        component={TasksStackNavigator}
+        name="Settings"
+        component={SettingsScreen}
         options={{
           headerShown: false,
           drawerIcon: ({ color }) => (
-            <Icon name="hand-holding-water" size={20} color={color} />
+            <Ionicons name="settings" size={20} color={color} />
           ),
         }}
       />

@@ -1,10 +1,10 @@
 import { Text } from "react-native";
 
 import { Layout } from "../Layout/Layout";
-export default function HomeScreen({ navigation }) {
+export default function SearchScreen() {
   return (
     <Layout>
-      <Text>Home Screen</Text>
+      <Text>Search Screen</Text>
     </Layout>
   );
 }

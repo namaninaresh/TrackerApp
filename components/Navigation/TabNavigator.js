@@ -7,6 +7,10 @@ import {
   TasksStackNavigator,
   BudgetStackNavigator,
   WaterStackNavigator,
+  SearchStackNavigator,
+  ProfileStackNavigator,
+  TransactionStackNavigator,
+  NotificationStackNavigator,
 } from "./StackNavigator";
 import colors from "../../theme/colors";
 import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
@@ -78,9 +82,10 @@ const BottomTabNavigator = () => {
             },
           })}
         />
+
         <Tab.Screen
-          name="Water"
-          component={WaterStackNavigator}
+          name="Search"
+          component={SearchStackNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
               <View
@@ -89,7 +94,7 @@ const BottomTabNavigator = () => {
                 }}
               >
                 <Icon
-                  name="glass-whiskey"
+                  name="search"
                   size={20}
                   color={focused ? "red" : "grey"}
                 ></Icon>
@@ -99,7 +104,7 @@ const BottomTabNavigator = () => {
           listeners={({ navigation, route }) => ({
             tabPress: (e) => {
               Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 1.1,
+                toValue: getWidth() * 1.7,
                 useNativeDriver: true,
               }).start();
             },
@@ -107,30 +112,42 @@ const BottomTabNavigator = () => {
         />
         <Tab.Screen
           name="ActionButton"
-          component={WelcomeScreen}
+          component={TransactionStackNavigator}
           options={({ navigation }) => ({
             tabBarIcon: ({ focused }) => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("ActionButton")}
+                stye={{ backgroundColor: "green" }}
               >
                 <View
                   style={{
-                    width: 50,
-                    height: 50,
-                    backgroundColor: "red",
-                    borderRadius: 25,
+                    width: 70,
+                    height: 70,
+                    backgroundColor: colors.ash0,
+                    borderRadius: 35,
                     justifyContent: "center",
                     alignItems: "center",
                     position: "absolute",
                     top: -60,
-                    left: -22,
+                    left: -30,
                   }}
                 >
-                  <Icon
-                    name="plus"
-                    size={20}
-                    color={focused ? "white" : "white"}
-                  ></Icon>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 50,
+                      backgroundColor: "red",
+                      borderRadius: 25,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Icon
+                      name="plus"
+                      size={20}
+                      color={focused ? "white" : "white"}
+                    ></Icon>
+                  </View>
                 </View>
               </TouchableOpacity>
             ),
@@ -138,15 +155,16 @@ const BottomTabNavigator = () => {
           listeners={({ navigation, route }) => ({
             tabPress: (e) => {
               Animated.spring(tabOffsetValue, {
-                toValue: 0,
+                toValue: getWidth() * 60,
                 useNativeDriver: true,
               }).start();
             },
           })}
         />
+
         <Tab.Screen
-          name="Tasks"
-          component={TasksStackNavigator}
+          name="NotificationTab"
+          component={NotificationStackNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
               <View
@@ -155,7 +173,7 @@ const BottomTabNavigator = () => {
                 }}
               >
                 <Icon
-                  name="tasks"
+                  name="bell"
                   size={20}
                   color={focused ? "red" : "grey"}
                 ></Icon>
@@ -165,15 +183,15 @@ const BottomTabNavigator = () => {
           listeners={({ navigation, route }) => ({
             tabPress: (e) => {
               Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 3.4,
+                toValue: getWidth() * 5,
                 useNativeDriver: true,
               }).start();
             },
           })}
         />
         <Tab.Screen
-          name="Budget"
-          component={BudgetStackNavigator}
+          name="My Profile"
+          component={ProfileStackNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
               <View
@@ -182,7 +200,7 @@ const BottomTabNavigator = () => {
                 }}
               >
                 <Icon
-                  name="credit-card"
+                  name="user-alt"
                   size={20}
                   color={focused ? "red" : "grey"}
                 ></Icon>
@@ -192,7 +210,7 @@ const BottomTabNavigator = () => {
           listeners={({ navigation, route }) => ({
             tabPress: (e) => {
               Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 4.5,
+                toValue: getWidth() * 6.8,
                 useNativeDriver: true,
               }).start();
             },
@@ -206,7 +224,7 @@ const BottomTabNavigator = () => {
           position: "absolute",
           bottom: 90,
           backgroundColor: "red",
-          left: 25,
+          left: 35,
           borderRadius: 50,
           transform: [{ translateX: tabOffsetValue }],
         }}
@@ -217,7 +235,7 @@ const BottomTabNavigator = () => {
 
 function getWidth() {
   let width = Dimensions.get("window").width;
-  width = width - 80;
-  return width / 5;
+  width = width - 60;
+  return width / 8;
 }
 export default BottomTabNavigator;

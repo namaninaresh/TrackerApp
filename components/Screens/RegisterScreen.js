@@ -13,6 +13,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 
 import Input from "../Input";
@@ -81,6 +82,9 @@ export default function Register({ navigation }) {
           inputs.password
         ).then(
           async (response) => {
+            await updateProfile(response.user, {
+              displayName: inputs.fullname,
+            });
             await sendEmailVerification(response.user, actionCodeSettings);
             AsyncStorage.setItem(
               "Auth_Token",

@@ -9,7 +9,10 @@ import PageHeader from "../atoms/PageHeader";
 import { Text } from "react-native";
 import UserRegistration from "../Screens/UserRegistration";
 import FadeInRightExample from "../Screens/FadeInRightExample";
-import NavigationDrawerHeader from "./NavigationDrawerHeader";
+import {
+  NavigationDrawerHeader,
+  NavigationStackHeader,
+} from "./NavigationDrawerHeader";
 import BudgetScreen from "../Screens/BudgetScreen";
 import WaterScreen from "../Screens/WaterScreen";
 import SearchScreen from "../Screens/SearchScreen";
@@ -21,6 +24,7 @@ import SettingsScreen from "../Screens/SettingsScreen";
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
+  headerMode: "float",
   headerStyle: {
     backgroundColor: "white",
   },
@@ -74,19 +78,7 @@ const MainStackNavigator = () => {
         }}
       />
 
-      <Stack.Screen
-        name="Fade"
-        component={FadeInRightExample}
-        options={({ navigation }) => {
-          return {
-            // headerLeft: () => <HeaderLeft navigation={navigation} />,
-            headerTitle: (props) => (
-              <PageHeader navigation={navigation} props={props} name="Fade" />
-            ),
-            //headerRight: () => <HeaderRight navigation={navigation} />,
-          };
-        }}
-      />
+      <Stack.Screen name="Fade" component={FadeInRightExample} />
     </Stack.Navigator>
   );
 };
@@ -212,11 +204,9 @@ const ProfileStackNavigator = () => {
         component={SettingsScreen}
         options={({ navigation }) => {
           return {
+            headerMode: "float",
             headerLeft: () => (
-              <NavigationDrawerHeader
-                navigationProps={navigation}
-                icon="menu"
-              />
+              <NavigationStackHeader navigationProps={navigation} />
             ),
             // headerLeft: () => <HeaderLeft navigation={navigation} />,
             headerTitle: (props) => (

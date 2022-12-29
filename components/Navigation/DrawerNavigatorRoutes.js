@@ -12,7 +12,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "../Screens/HomeScreen";
 import SettingsScreen from "../Screens/SettingsScreen";
 import CustomSidebarMenu from "../Screens/CustomSidebarMenu";
-import NavigationDrawerHeader from "../Navigation/NavigationDrawerHeader";
+import { NavigationDrawerHeader } from "../Navigation/NavigationDrawerHeader";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

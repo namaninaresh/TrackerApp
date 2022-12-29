@@ -1,5 +1,17 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { MaterialCommunityIcons as Icon, Ionicons } from "@expo/vector-icons";
+import {
+  Button,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import {
+  MaterialCommunityIcons as Icon,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import colors from "../../theme/colors";
 import { size } from "../../theme/fonts";
 import metrics from "../../theme/metrics";
@@ -7,8 +19,16 @@ import metrics from "../../theme/metrics";
 import { Layout } from "../Layout/Layout";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { getAuth } from "firebase/auth";
+function capitalFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export default function ProfileScreen() {
   const navigation = useNavigation();
+  const user = getAuth().currentUser;
+  let { displayName, email } = user;
+  displayName = "slovely Chinna ";
   return (
     <Layout>
       <View style={styles.container}>
@@ -28,10 +48,20 @@ export default function ProfileScreen() {
               />
             </View>
             <View>
-              <Text style={styles.usertitle}>Naresh Namani</Text>
-              <Text style={styles.userdescription}>
-                namaninaresh1996@gmail.com
+              <Text style={[styles.usertitle, { fontSize: size.font16 }]}>
+                {displayName
+                  ? capitalFirstLetter(displayName)
+                  : "Chinna Namani"}
               </Text>
+              <Text style={styles.userdescription}>{email}</Text>
+              <TouchableOpacity
+                style={styles.editProfilebtn}
+                onPress={() => {}}
+              >
+                <Text style={{ color: "white", fontWeight: "700" }}>
+                  Edit Profile
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -43,53 +73,76 @@ export default function ProfileScreen() {
               marginVertical: 10,
             }}
           >
-            <View style={{ flexDirection: "column" }}>
-              <View style={[styles.flexRow, styles.center]}>
-                <TouchableOpacity style={styles.card}>
-                  <Icon name="bank" size={40} color={colors.ash4} />
-                  <Text style={styles.cardTitle}>Bank Accounts</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.card}>
-                  <Ionicons name="cash" size={40} color={colors.ash4} />
-                  <Text style={styles.cardTitle}>Cash</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.flexRow}>
-                <TouchableOpacity style={styles.card}>
-                  <Icon name="account-cash" size={40} color={colors.ash4} />
-                  <Text style={styles.cardTitle}> Loans Taken</Text>
-                </TouchableOpacity>
+            <View style={[styles.card, { flexDirection: "column" }]}>
+              <TouchableOpacity style={[styles.listItem]}>
+                <MaterialIcons name="account-balance" size={24} />
+                <Text style={styles.cardTitle}>Accounts</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity>
+              {/*} <TouchableOpacity style={[styles.listItem]}>
+                <Ionicons name="card-outline" size={24} />
+                <Text style={styles.cardTitle}>Cards</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity> */}
 
-                <TouchableOpacity style={styles.card}>
-                  <Icon name="cash-refund" size={40} color={colors.ash4} />
-                  <Text style={styles.cardTitle}>Loans Given</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.flexRow}>
-                <TouchableOpacity style={styles.card}>
-                  <Icon name="chart-bar" size={40} color={colors.ash4} />
-                  <Text style={styles.cardTitle}> Stats</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.card}>
-                  <Icon name="bank-transfer" size={40} color={colors.ash4} />
-                  <Text style={styles.cardTitle}>All Trasactions</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.flexRow}>
-                <TouchableOpacity style={styles.card}>
-                  <Icon name="account-edit" size={40} color={colors.ash4} />
-                  <Text style={styles.cardTitle}>Edit Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.card}
-                  onPress={() => navigation.navigate("SettingsScreen")}
+              <TouchableOpacity style={[styles.listItem]}>
+                <Ionicons name="cash-outline" size={24} />
+                <Text style={styles.cardTitle}>Cash </Text>
+                <View
+                  style={{
+                    backgroundColor: colors.mintGreen,
+                    paddingVertical: 3,
+                    paddingHorizontal: 10,
+                    borderRadius: 10,
+                  }}
                 >
-                  <Ionicons name="settings" size={40} color={colors.ash4} />
-                  <Text style={styles.cardTitle}>Settings</Text>
-                </TouchableOpacity>
-              </View>
+                  <Text style={{ color: "white", fontSize: size.font12 }}>
+                    {"\u20B9"}10,000
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={[styles.listItem]}>
+                <Icon name="account-cash" size={24} />
+                <Text style={styles.cardTitle}>Debt Loans </Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.listItem]}>
+                <Icon name="cash-refund" size={24} />
+                <Text style={styles.cardTitle}>Credit Loans</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity>
+              <View style={styles.separator}></View>
+              <TouchableOpacity style={[styles.listItem]}>
+                <Ionicons name="stats-chart-outline" size={24} />
+                <Text style={styles.cardTitle}>Stats </Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.listItem]}>
+                <Icon name="bank-transfer" size={24} />
+                <Text style={styles.cardTitle}>All Transactions </Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity>
+              <View style={styles.separator}></View>
+              <TouchableOpacity
+                style={[styles.listItem]}
+                onPress={() => navigation.navigate("SettingsScreen")}
+              >
+                <Ionicons name="settings-outline" size={24} />
+                <Text style={styles.cardTitle}>Settings</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={[styles.listItem]}>
+                <MaterialIcons name="delete-outline" size={24} />
+                <Text style={styles.cardTitle}>Clear Cache</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.listItem]}>
+                <MaterialIcons name="logout" size={24} />
+                <Text style={styles.cardTitle}>Logout</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} />
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
@@ -102,6 +155,14 @@ const styles = StyleSheet.create({
     width: metrics.screenWidth,
     height: metrics.screenHeight,
     paddingTop: 50,
+  },
+  editProfilebtn: {
+    padding: 10,
+    backgroundColor: "#307ecc",
+    color: colors.ash0,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
   },
   headerContainer: {
     flexDirection: "row",
@@ -124,7 +185,6 @@ const styles = StyleSheet.create({
     width: 80,
   },
   usertitle: {
-    fontSize: size.font16 * 1.1,
     fontWeight: "800",
   },
   userdescription: {
@@ -152,11 +212,7 @@ const styles = StyleSheet.create({
   }, */
   card: {
     padding: 10,
-    width: 140,
-    margin: 10,
-    height: 100,
-    justifyContent: "center",
-    alignItems: "center",
+
     borderRadius: 10,
     backgroundColor: "white",
     shadowColor: colors.ash3,
@@ -169,13 +225,20 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   cardTitle: {
+    flex: 1,
     paddingVertical: 10,
+    paddingHorizontal: 20,
   },
-  flexRow: {
+  listItem: {
     flexDirection: "row",
-  },
-  center: {
     justifyContent: "center",
     alignItems: "center",
+    marginVertical: 5,
+  },
+  separator: {
+    marginVertical: 5,
+    borderBottomColor: colors.ash1,
+    borderBottomWidth: 1,
+    opacity: 0.4,
   },
 });

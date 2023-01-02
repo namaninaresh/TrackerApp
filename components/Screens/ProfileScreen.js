@@ -159,7 +159,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     width: metrics.screenWidth,
-    paddingTop: 30,
+    paddingTop: 75,
   },
   editProfilebtn: {
     padding: 10,

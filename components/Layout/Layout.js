@@ -10,14 +10,14 @@ export const Layout = ({ children, style }) => {
       style={[
         {
           paddingBottom: insets.bottom,
-          paddingTop: insets.top,
+
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
         },
         { ...style },
       ]}
-      edges={["top", "right", "left"]}
+      edges={["right", "left"]}
     >
       {children}
     </SafeAreaView>

@@ -99,12 +99,12 @@ const BottomTabNavigator = (props) => {
           })}
         />
         <Tab.Screen
-          name="ActionButton"
+          name="TransactionsPage"
           component={TransactionStackNavigator}
           options={({ navigation }) => ({
             tabBarIcon: ({ focused }) => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("ActionButton")}
+                onPress={() => navigation.navigate("TransactionsPage")}
                 stye={{ backgroundColor: "green" }}
               >
                 <View

@@ -42,7 +42,7 @@ export default function AddTransactionScreen({ navigation }) {
       valid = false;
     }
     if (!inputs.amount) {
-      handleError("Please enter email", "email");
+      handleError("Please enter amount", "amount");
       valid = false;
     }
 
@@ -138,6 +138,14 @@ export default function AddTransactionScreen({ navigation }) {
           size="large"
           buttonStyle={{ backgroundColor: colors.mintGreen }}
           onPress={validate}
+        />
+        <Button
+          text="View All Transactions"
+          type="primary"
+          bordered
+          size="large"
+          buttonStyle={{ backgroundColor: colors.gold }}
+          onPress={() => navigation.navigate("AllTransactions")}
         />
       </ScrollView>
     </>

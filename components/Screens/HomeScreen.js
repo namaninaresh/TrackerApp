@@ -19,64 +19,9 @@ import { useContext, useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 import UserContext from "../context/UserContext";
+import MoneyFormat from "../atoms/MoneyFormat";
+import TransactionItem from "../molecules/TransactionItem";
 const rupee = "\u20B9";
-
-const Transation = ({ item }) => (
-  <View
-    key={item.id}
-    style={{
-      paddingHorizontal: 20,
-      borderBottomColor: colors.ash2,
-      borderBottomWidth: 0.4,
-
-      paddingVertical: 5,
-    }}
-  >
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
-      <Text style={{ fontWeight: "800" }}>{item.title}</Text>
-      <Text style={{ fontWeight: "900" }}>
-        {rupee}
-        {item.amount}
-      </Text>
-    </View>
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingVertical: 10,
-        opacity: 0.5,
-      }}
-    >
-      <Text style={{ fontWeight: "100", fontSize: size.font10 }}>Today</Text>
-      <Text
-        style={{
-          fontWeight: "800",
-          fontSize: size.font10,
-          color: colors.orange,
-        }}
-      >
-        Debicted
-      </Text>
-    </View>
-    <Text
-      style={{
-        fontSize: size.font10,
-        paddingBottom: 10,
-        opacity: 0.3,
-        letterSpacing: 0.2,
-      }}
-    >
-      {item.description}
-    </Text>
-  </View>
-);
 
 const Spent = ({ totalExpenses }) => (
   <View
@@ -128,7 +73,7 @@ const Spent = ({ totalExpenses }) => (
             paddingVertical: 10,
           }}
         >
-          {rupee} {totalExpenses}
+          {rupee} {MoneyFormat(totalExpenses)}
         </Text>
       </View>
     </View>
@@ -285,7 +230,7 @@ export default function HomeScreen({ navigation }) {
                 Recent Transations
               </Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate("TransactionsPage")}
+                onPress={() => navigation.navigate("AllTransactions")}
                 style={{
                   flexDirection: "row",
                   justifyContent: "center",
@@ -321,7 +266,7 @@ export default function HomeScreen({ navigation }) {
           )} */}
             {transactions &&
               transactions.map((item, index) => (
-                <Transation item={item} key={index} />
+                <TransactionItem item={item} key={index} />
               ))}
           </View>
         </View>

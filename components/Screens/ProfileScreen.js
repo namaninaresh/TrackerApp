@@ -124,7 +124,10 @@ export default function ProfileScreen() {
                 <Text style={styles.cardTitle}>Stats </Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.listItem]}>
+              <TouchableOpacity
+                style={[styles.listItem]}
+                onPress={() => navigation.navigate("AllTransactions")}
+              >
                 <Icon name="bank-transfer" size={22} />
                 <Text style={styles.cardTitle}>All Transactions </Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />

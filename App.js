@@ -24,6 +24,7 @@ import PageHeader from "./components/atoms/PageHeader";
 import { getAuth } from "firebase/auth";
 import UserProvider from "./components/context/UserProvider";
 import AccountScreen from "./components/Screens/AccountScreen";
+import AllTransactionScreen from "./components/Screens/AllTransactionScreen";
 
 const Stack = createStackNavigator();
 
@@ -121,6 +122,29 @@ const App = () => {
                       navigation={navigation}
                       props={props}
                       name="Settings "
+                    />
+                  ),
+                  //headerRight: () => <HeaderRight navigation={navigation} />,
+                };
+              }}
+            />
+
+            <Stack.Screen
+              name="AllTransactions"
+              component={AllTransactionScreen}
+              // Hiding header for Navigation Drawer
+              options={({ navigation }) => {
+                return {
+                  headerMode: "float",
+                  headerLeft: () => (
+                    <NavigationStackHeader navigationProps={navigation} />
+                  ),
+                  // headerLeft: () => <HeaderLeft navigation={navigation} />,
+                  headerTitle: (props) => (
+                    <PageHeader
+                      navigation={navigation}
+                      props={props}
+                      name="All Transactions "
                     />
                   ),
                   //headerRight: () => <HeaderRight navigation={navigation} />,

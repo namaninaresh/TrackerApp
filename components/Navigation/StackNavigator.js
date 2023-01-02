@@ -14,6 +14,7 @@ import ProfileScreen from "../Screens/ProfileScreen";
 import AddTransactionScreen from "../Screens/AddTransaction";
 import NotificationScreen from "../Screens/Notification";
 import SettingsScreen from "../Screens/SettingsScreen";
+import EditProfileScreen from "../Screens/EditProfileScreen";
 
 const Stack = createStackNavigator();
 
@@ -173,8 +174,8 @@ const ProfileStackNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="SettingsScreen"
-        component={SettingsScreen}
+        name="EditProfileScreen"
+        component={EditProfileScreen}
         options={({ navigation }) => {
           return {
             headerMode: "float",
@@ -186,7 +187,7 @@ const ProfileStackNavigator = () => {
               <PageHeader
                 navigation={navigation}
                 props={props}
-                name="Settings"
+                name="Edit Profile"
               />
             ),
             //headerRight: () => <HeaderRight navigation={navigation} />,

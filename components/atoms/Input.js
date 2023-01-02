@@ -14,7 +14,7 @@ const Input = ({
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
   return (
-    <View style={{ marginBottom: 20 }}>
+    <View style={{ marginBottom: 20, width: "100%" }}>
       {label && <Text style={styles.label}>{label}</Text>}
       <View
         style={[
@@ -37,6 +37,7 @@ const Input = ({
             onFocus();
             setIsFocused(true);
           }}
+          value
           onBlur={() => {
             setIsFocused(false);
           }}

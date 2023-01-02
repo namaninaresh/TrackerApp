@@ -13,7 +13,7 @@ import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNavigator = () => {
+const BottomTabNavigator = (props) => {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   return (
     <>
@@ -22,6 +22,7 @@ const BottomTabNavigator = () => {
           headerShown: false,
           tabBarShowLabel: false,
 
+          tabBarHideOnKeyboard: true,
           tabBarActiveTintColor: "#58ceb2",
           tabBarInactiveTintColor: "gray",
           //Tab bar styles can be added here

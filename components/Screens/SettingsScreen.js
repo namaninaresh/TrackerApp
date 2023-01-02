@@ -1,22 +1,10 @@
-import React from "react";
-import { View, Text, SafeAreaView } from "react-native";
+import { Text } from "react-native";
 
-const SettingsScreen = () => {
+import { Layout } from "../Layout/Layout";
+export default function SettingsScreen() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 16 }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text>Settings Screen</Text>
-        </View>
-      </View>
-    </SafeAreaView>
+    <Layout>
+      <Text>Settings Screen</Text>
+    </Layout>
   );
-};
-
-export default SettingsScreen;
+}

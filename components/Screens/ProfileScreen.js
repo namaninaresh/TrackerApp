@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from "react-native";
 import {
   MaterialCommunityIcons as Icon,
@@ -17,18 +18,18 @@ import { size } from "../../theme/fonts";
 import metrics from "../../theme/metrics";
 
 import { Layout } from "../Layout/Layout";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
+import { useContext } from "react";
+import UserContext from "../context/UserContext";
 function capitalFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const user = getAuth().currentUser;
-  let { displayName, email } = user;
-  displayName = "slovely Chinna ";
+  const { user } = useContext(UserContext);
+
   return (
     <Layout>
       <View style={styles.container}>
@@ -49,14 +50,16 @@ export default function ProfileScreen() {
             </View>
             <View>
               <Text style={[styles.usertitle, { fontSize: size.font16 }]}>
-                {displayName
-                  ? capitalFirstLetter(displayName)
+                {user.displayName
+                  ? capitalFirstLetter(user.displayName)
                   : "Chinna Namani"}
               </Text>
-              <Text style={styles.userdescription}>{email}</Text>
+              <Text style={styles.userdescription}>{user.email}</Text>
               <TouchableOpacity
                 style={styles.editProfilebtn}
-                onPress={() => {}}
+                onPress={() => {
+                  navigation.navigate("EditProfile");
+                }}
               >
                 <Text style={{ color: "white", fontWeight: "700" }}>
                   Edit Profile
@@ -65,7 +68,7 @@ export default function ProfileScreen() {
             </View>
           </View>
         </View>
-        <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 170 }}>
           <View
             style={{
               borderRadius: 10,
@@ -74,8 +77,11 @@ export default function ProfileScreen() {
             }}
           >
             <View style={[styles.card, { flexDirection: "column" }]}>
-              <TouchableOpacity style={[styles.listItem]}>
-                <MaterialIcons name="account-balance" size={24} />
+              <TouchableOpacity
+                style={[styles.listItem]}
+                onPress={() => navigation.navigate("AccountScreen")}
+              >
+                <MaterialIcons name="account-balance" size={20} />
                 <Text style={styles.cardTitle}>Accounts</Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
@@ -86,7 +92,7 @@ export default function ProfileScreen() {
               </TouchableOpacity> */}
 
               <TouchableOpacity style={[styles.listItem]}>
-                <Ionicons name="cash-outline" size={24} />
+                <Ionicons name="cash-outline" size={20} />
                 <Text style={styles.cardTitle}>Cash </Text>
                 <View
                   style={{
@@ -103,23 +109,23 @@ export default function ProfileScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity style={[styles.listItem]}>
-                <Icon name="account-cash" size={24} />
+                <Icon name="account-cash" size={20} />
                 <Text style={styles.cardTitle}>Debt Loans </Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
               <TouchableOpacity style={[styles.listItem]}>
-                <Icon name="cash-refund" size={24} />
+                <Icon name="cash-refund" size={20} />
                 <Text style={styles.cardTitle}>Credit Loans</Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
               <View style={styles.separator}></View>
               <TouchableOpacity style={[styles.listItem]}>
-                <Ionicons name="stats-chart-outline" size={24} />
+                <Ionicons name="stats-chart-outline" size={20} />
                 <Text style={styles.cardTitle}>Stats </Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
               <TouchableOpacity style={[styles.listItem]}>
-                <Icon name="bank-transfer" size={24} />
+                <Icon name="bank-transfer" size={22} />
                 <Text style={styles.cardTitle}>All Transactions </Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
@@ -128,18 +134,18 @@ export default function ProfileScreen() {
                 style={[styles.listItem]}
                 onPress={() => navigation.navigate("SettingsScreen")}
               >
-                <Ionicons name="settings-outline" size={24} />
+                <Ionicons name="settings-outline" size={20} />
                 <Text style={styles.cardTitle}>Settings</Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
 
               <TouchableOpacity style={[styles.listItem]}>
-                <MaterialIcons name="delete-outline" size={24} />
+                <MaterialIcons name="delete-outline" size={20} />
                 <Text style={styles.cardTitle}>Clear Cache</Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
               <TouchableOpacity style={[styles.listItem]}>
-                <MaterialIcons name="logout" size={24} />
+                <MaterialIcons name="logout" size={20} />
                 <Text style={styles.cardTitle}>Logout</Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} />
               </TouchableOpacity>
@@ -153,8 +159,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     width: metrics.screenWidth,
-    height: metrics.screenHeight,
-    paddingTop: 50,
+    paddingTop: 30,
   },
   editProfilebtn: {
     padding: 10,

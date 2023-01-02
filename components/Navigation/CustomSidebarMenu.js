@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Alert, StyleSheet, Image } from "react-native";
 
 import {
@@ -12,7 +12,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { size } from "../../theme/fonts";
+import UserContext from "../context/UserContext";
 const CustomSidebarMenu = (props) => {
+  const { user } = useContext(UserContext);
   return (
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
@@ -28,9 +30,11 @@ const CustomSidebarMenu = (props) => {
             justifyContent: "center",
           }}
         >
-          <Text style={stylesSidebar.profileHeaderText}>Naresh Namani</Text>
+          <Text style={stylesSidebar.profileHeaderText}>
+            {user.displayName}
+          </Text>
           <Text style={stylesSidebar.profileHeaderDescription}>
-            lovelychinna799@gmail.com
+            {user.email}
           </Text>
         </View>
       </View>

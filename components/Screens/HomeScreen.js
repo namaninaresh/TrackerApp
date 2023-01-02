@@ -4,7 +4,7 @@ import { Layout } from "../Layout/Layout";
 export default function HomeScreen({ navigation }) {
   return (
     <Layout>
-      <Text>Home Screen</Text>
+      <Text>Homes Screen</Text>
     </Layout>
   );
 }

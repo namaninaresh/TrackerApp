@@ -6,8 +6,9 @@ import {
   Image,
   FlatList,
   Animated,
+  ToastAndroid,
 } from "react-native";
-import Icon from "@expo/vector-icons/Ionicons";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Layout } from "../Layout/Layout";
 import metrics from "../../theme/metrics";
 import colors from "../../theme/colors";
@@ -16,43 +17,19 @@ import SwipeableRow from "../atoms/SwipeableRow";
 
 import { Swipeable } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputModal from "../atoms/InputModal";
-const data = [
-  {
-    id: 1,
-    logo: require("../../assets/paytm_logo.png"),
-    bankName: "Paytm Bank",
-    type: "bank",
-    amount: "24,400",
-    icon: null,
-  },
-  {
-    id: 2,
-    logo: require("../../assets/icici_logo.png"),
-    bankName: "Icici ",
-    type: "bank",
-    amount: "28,952",
-    icon: null,
-  },
+import { db } from "../../firebase";
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  getDoc,
+  addDoc,
+  Timestamp,
+} from "firebase/firestore";
 
-  {
-    id: 3,
-    logo: null,
-    bankName: "**** **** **** 4567 ",
-    icon: "card",
-    type: "bank",
-    amount: "10,000",
-  },
-  {
-    id: 4,
-    logo: null,
-    bankName: "Cash",
-    icon: "cash",
-    type: "cash",
-    amount: "10,000",
-  },
-];
 const ListItem = ({ data, onEdit, onDelete }) => {
   return (
     <Swipeable
@@ -99,13 +76,11 @@ const ListItem = ({ data, onEdit, onDelete }) => {
               borderRadius: 30,
             }}
           >
-            <Icon name={data.icon ? data.icon : "backspace"} size={20} />
+            <Icon name={data.icon ? data.icon : "bank"} size={20} />
           </View>
         )}
 
-        <Text style={[styles.cardTitle, { fontSize: 12 }]}>
-          {data.bankName}
-        </Text>
+        <Text style={[styles.cardTitle, { fontSize: 12 }]}>{data.name}</Text>
         <View
           style={{
             backgroundColor: colors.mintGreen,
@@ -139,34 +114,63 @@ const ListItem = ({ data, onEdit, onDelete }) => {
 export default function AccountScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-  const [listData, setListData] = useState(data);
+  const [listData, setListData] = useState(null);
+
+  useEffect(() => {
+    fetchData();
+  }, [listData]);
+
+  const fetchData = async () => {
+    const tempData = [];
+    const querySnapSHot = await getDocs(collection(db, "accounts"));
+    querySnapSHot.forEach((doc) => {
+      tempData.push({ id: doc.id, ...doc.data() });
+    });
+    setListData(tempData);
+  };
+
   const handleModal = () => {
     setModalVisible(!modalVisible);
     setEditingItem(null);
   };
   const toggleModal = () => {
     setModalVisible(!modalVisible);
-    setEditingItem({ id: listData.length });
+    setEditingItem({ id: listData.length, amount: 0 });
   };
 
-  const handleError = (errorMessage, input) => {
+  /*const handleError = (errorMessage, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
-  };
+  }; */
 
   const handleEditItem = (editedItem, name) => {
     setEditingItem(editedItem);
   };
 
-  const handleSave = (editedItem) => {
-    console.log("saved", editedItem);
+  const handleSave = async (editedItem) => {
+    const found = listData.some((el) => el.id === editedItem.id);
 
-    const found = listData.some((el) => el.bankName === editedItem.bankName);
+    if (!found) {
+      try {
+        addDoc(collection(db, "accounts"), {
+          amount: editedItem.amount,
+          name: editedItem.name,
+          type: editedItem.type,
+          created: Timestamp.now(),
+        });
+        ToastAndroid.show("Successfully Added !", ToastAndroid.BOTTOM);
 
-    if (!found) listData.push(editedItem);
+        listData.push(editedItem);
+      } catch (error) {
+        ToastAndroid.show(
+          "Something wrong-Adding Account !",
+          ToastAndroid.BOTTOM
+        );
+      }
+    }
     if (found) {
       const newData = listData.map((item) => {
         if (item.id === editedItem.id) {
@@ -176,6 +180,16 @@ export default function AccountScreen() {
         return item;
       });
       setListData(newData);
+      updateDoc(doc(db, "accounts", editedItem["id"]), { ...editedItem })
+        .then(() => {
+          ToastAndroid.show("Successfully Updated !", ToastAndroid.BOTTOM);
+        })
+        .catch(() =>
+          ToastAndroid.show(
+            "Something went wrong -updating Account!",
+            ToastAndroid.TOP
+          )
+        );
     }
   };
 
@@ -200,8 +214,8 @@ export default function AccountScreen() {
             }}
           >
             <Icon
-              name="add"
-              size={50}
+              name="bank-plus"
+              size={40}
               style={{
                 padding: 10,
                 backgroundColor: colors.ash1,
@@ -229,22 +243,12 @@ export default function AccountScreen() {
           />
         </View>
       </View>
-      <Text
-        style={{
-          position: "absolute",
-          color: colors.ash3,
-          bottom: 16,
-          textAlignVertical: "bottom",
-        }}
-      >
-        Note: Swipe left to view options
-      </Text>
+
       {editingItem && (
         <InputModal
           visible={true}
           item={editingItem}
           onEdit={(item) => handleSave(item)}
-          onSubmit={handleEditItem}
           onClose={handleModal}
           // onClose={() => setEditingItem(null) }
         />

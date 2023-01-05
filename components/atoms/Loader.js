@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   loader: {
+    marginTop: -60,
     height: 70,
     backgroundColor: "white",
     marginHorizontal: 50,

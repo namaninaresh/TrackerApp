@@ -24,6 +24,7 @@ import { size, weight } from "../../theme/fonts";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { Layout } from "../Layout/Layout";
+import InfoModal from "../atoms/InfoModal";
 export default function AddTransactionScreen({ navigation }) {
   const [inputs, setInputs] = useState({
     title: "",
@@ -33,6 +34,7 @@ export default function AddTransactionScreen({ navigation }) {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const validate = () => {
     Keyboard.dismiss();
@@ -72,7 +74,7 @@ export default function AddTransactionScreen({ navigation }) {
           title: inputs.title,
           created: Timestamp.now(),
         });
-
+        setModalVisible(true);
         setInputs({
           title: "",
           amount: 0,
@@ -146,6 +148,11 @@ export default function AddTransactionScreen({ navigation }) {
           size="large"
           buttonStyle={{ backgroundColor: colors.gold }}
           onPress={() => navigation.navigate("AllTransactions")}
+        />
+        <InfoModal
+          visible={modalVisible}
+          onSubmit={() => setModalVisible(!modalVisible)}
+          message="Trasaction added Successfully !"
         />
       </ScrollView>
     </>

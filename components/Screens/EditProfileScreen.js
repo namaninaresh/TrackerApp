@@ -28,7 +28,6 @@ import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import UserContext from "../context/UserContext";
 import InfoModal from "../atoms/InfoModal";
-import InputModal from "../atoms/InfoModal";
 
 export default function EditProfileScreen() {
   const { user, setUser } = useContext(UserContext);
@@ -96,39 +95,37 @@ export default function EditProfileScreen() {
 
   const updateUserDetails = () => {
     setLoading(true);
-    setTimeout(async () => {
-      setLoading(false);
 
-      try {
-        updateProfile(getAuth().currentUser, {
-          displayName: inputs.fullname,
+    try {
+      updateProfile(getAuth().currentUser, {
+        displayName: inputs.fullname,
+      })
+        .then(() => {
+          setLoading(false);
+          setUser({ ...user, displayName: inputs.fullname });
+          setModalVisible(!modalVisible);
         })
-          .then(() => {
-            setUser({ ...user, displayName: inputs.fullname });
-            setModalVisible(!modalVisible);
-          })
-          .catch((error) => {
-            console.log("err", error);
-          });
-        /* await updateProfile(user, {
+        .catch((error) => {
+          console.log("err", error);
+        });
+      /* await updateProfile(user, {
               displayName: inputs.fullname, 
             }); */
 
-        /*AsyncStorage.setItem(
+      /*AsyncStorage.setItem(
               "Auth_Token",
               response._tokenResponse.refreshToken
             ); */
 
-        //await sendEmailVerification(response.user, actionCodeSettings)
-        //response.__tokenResponse.refreshToken
-        // console.log("Verification email sent", response);
+      //await sendEmailVerification(response.user, actionCodeSettings)
+      //response.__tokenResponse.refreshToken
+      // console.log("Verification email sent", response);
 
-        //AsyncStorage.setItem("user",JSON.stringify(inputs))
-        //navigate
-      } catch (error) {
-        console.log("something", error);
-      }
-    }, 500);
+      //AsyncStorage.setItem("user",JSON.stringify(inputs))
+      //navigate
+    } catch (error) {
+      console.log("something", error);
+    }
   };
 
   const handleError = (errorMessage, input) => {
@@ -253,7 +250,7 @@ export default function EditProfileScreen() {
               />
             </View>
 
-            <InputModal
+            <InfoModal
               visible={modalVisible}
               onSubmit={handleButtonPress}
               message="Profile updated Successfully !"

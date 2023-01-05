@@ -6,11 +6,13 @@ import {
   Text,
   TouchableOpacity,
   Modal,
+  Keyboard,
 } from "react-native";
 import colors from "../../theme/colors";
 import Icon from "@expo/vector-icons/MaterialIcons";
 import Input from "./Input";
 import Button from "./Button";
+import metrics from "../../theme/metrics";
 
 function InputModal({
   visible,
@@ -23,11 +25,38 @@ function InputModal({
   iconBgStyle,
 }) {
   const [inputs, setInputs] = useState(item);
-
+  const [errors, setErrors] = useState({});
   const handleEdit = () => {
     onEdit(inputs);
     onClose();
   };
+
+  const handleChange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+
+  const validate = () => {
+    Keyboard.dismiss();
+    let valid = true;
+    if (!inputs.name) {
+      handleError("Please enter title", "name");
+      valid = false;
+    }
+    if (!inputs.type) {
+      handleError("Please enter amount", "type");
+      valid = false;
+    }
+    if (!inputs.amount) {
+      handleError("Please enter amount", "amount");
+      valid = false;
+    }
+
+    if (valid) handleEdit();
+  };
+  const handleError = (errorMessage, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
+  };
+
   return (
     <Modal
       animationType="fade"
@@ -36,7 +65,8 @@ function InputModal({
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.container} onStartShouldSetResponder={onClose}>
+      <View style={styles.backDrop} onStartShouldSetResponder={onClose}></View>
+      <View style={styles.container}>
         <View style={styles.modal}>
           <View
             style={{
@@ -72,20 +102,33 @@ function InputModal({
             <Input
               iconName="account-outline"
               placeholder="Bank name"
-              value={inputs.bankName}
-              onChangeText={(text) => setInputs({ ...inputs, bankName: text })}
+              value={inputs.name}
+              error={errors.name}
+              onFocus={() => {
+                handleError(null, "name");
+              }}
+              onChangeText={(text) => handleChange(text, "name")}
             />
             <Input
               iconName="account-outline"
               placeholder="Bank Type"
               value={inputs.type}
-              onChangeText={(text) => setInputs({ ...inputs, type: text })}
+              error={errors.type}
+              onFocus={() => {
+                handleError(null, "type");
+              }}
+              onChangeText={(text) => handleChange(text, "type")}
             />
             <Input
               iconName="account-outline"
               placeholder="Amount"
-              value={inputs.amount}
-              onChangeText={(text) => setInputs({ ...inputs, amount: text })}
+              keyboardType="numeric"
+              error={errors.amount}
+              value={inputs.amount.toString()}
+              onFocus={() => {
+                handleError(null, "amount");
+              }}
+              onChangeText={(text) => handleChange(text, "amount")}
             />
             <View
               style={{
@@ -98,7 +141,7 @@ function InputModal({
                 type="primary"
                 bordered
                 size="large"
-                onPress={handleEdit}
+                onPress={validate}
               />
             </View>
           </View>
@@ -109,11 +152,17 @@ function InputModal({
 }
 
 const styles = StyleSheet.create({
-  container: {
+  backDrop: {
     flex: 1,
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  container: {
+    paddingTop: metrics.screenHeight / 4,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
   },
   input: {
     width: 200,
@@ -134,6 +183,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 3,
     },
+    zIndex: 10000,
     elevation: 9,
     shadowOpacity: 0.6,
     shadowRadius: 5,

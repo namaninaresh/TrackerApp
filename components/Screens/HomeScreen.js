@@ -15,8 +15,16 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Layout } from "../Layout/Layout";
 import metrics from "../../theme/metrics";
 import { size } from "../../theme/fonts";
+import { LinearGradient } from "expo-linear-gradient";
 import { useContext, useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import UserContext from "../context/UserContext";
 import MoneyFormat from "../atoms/MoneyFormat";
@@ -26,21 +34,19 @@ const rupee = "\u20B9";
 const Spent = ({ totalExpenses }) => (
   <View
     style={{
-      marginBottom: 10,
-      width: metrics.screenWidth,
-      backgroundColor: "white",
-      height: 200,
+      width: metrics.screenWidth - 30,
     }}
   >
     <View
       style={{
-        backgroundColor: "#307ecc",
+        backgroundColor: "rgba(23,26,28,0.9)",
+        //backgroundColor: "#171a1c",
         //backgroundColor: "rgba(58,167,127,1)",
         //  backgroundColor: "rgba(153,153,153,0.5)",
-        height: 180,
+        height: 200,
         margin: 10,
         borderRadius: 10,
-        color: "white",
+        color: "#47474e",
         paddingVertical: 20,
         paddingHorizontal: 20,
         justifyContent: "center",
@@ -49,7 +55,63 @@ const Spent = ({ totalExpenses }) => (
     >
       <Text
         style={{
-          color: "white",
+          color: "#fff",
+          //color: "#47474e",
+          fontWeight: "800",
+          fontSize: 14,
+          paddingVertical: 10,
+          textTransform: "uppercase",
+        }}
+      >
+        Total Spent
+      </Text>
+
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: "white",
+            fontWeight: "900",
+            fontSize: 22,
+            paddingVertical: 10,
+          }}
+        >
+          {rupee} {MoneyFormat(totalExpenses)}
+        </Text>
+      </View>
+    </View>
+  </View>
+);
+
+const Spent1 = ({ totalExpenses }) => (
+  <View
+    style={{
+      width: metrics.screenWidth - 30,
+    }}
+  >
+    <View
+      style={{
+        backgroundColor: "#171a1c",
+        //backgroundColor: "rgba(58,167,127,1)",
+        //  backgroundColor: "rgba(153,153,153,0.5)",
+        height: 200,
+        margin: 10,
+        borderRadius: 10,
+        color: "#47474e",
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text
+        style={{
+          color: "#fff",
+          //color: "#47474e",
           fontWeight: "800",
           fontSize: 14,
           paddingVertical: 10,
@@ -82,16 +144,13 @@ const Spent = ({ totalExpenses }) => (
 const Child1 = () => (
   <View
     style={{
-      marginBottom: 10,
-      width: metrics.screenWidth,
-      backgroundColor: "white",
-      height: 200,
+      width: metrics.screenWidth - 30,
     }}
   >
     <View
       style={{
         backgroundColor: "#307ecc",
-        // backgroundColor: "rgba(58,167,127,1)",
+        //backgroundColor: "rgba(58,167,127,1)",
         //  backgroundColor: "rgba(153,153,153,0.5)",
         height: 200,
         margin: 10,
@@ -99,6 +158,8 @@ const Child1 = () => (
         color: "white",
         paddingVertical: 20,
         paddingHorizontal: 20,
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Text
@@ -163,29 +224,64 @@ export default function HomeScreen({ navigation }) {
   const [transactions, setTransactions] = useState();
 
   useEffect(() => {
-    fetchData();
+    //fetchData();
 
-    const listener = navigation.addListener("focus", () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       fetchData();
     });
 
-    return () => {
-      listener.remove();
-    };
-  }, []);
+    return unsubscribe;
+  }, [navigation]);
 
   const [refreshing, setRefreshing] = useState(true);
   const fetchData = async () => {
     const tempData = [];
     let tempExpense = 0;
+
+    const q = query(collection(db, "transactions"), orderBy("created", "desc"));
+    onSnapshot(q, (querSnap) => {
+      let count = 0;
+
+      querSnap.forEach((doc) => {
+        tempExpense += Number(doc.data()["amount"]);
+        if (count < 4) tempData.push({ id: doc.id, ...doc.data() });
+        count++;
+      });
+
+      setExpenses(tempExpense);
+      setRefreshing(false);
+      setTransactions(tempData);
+    });
+    /* const q = query(collection(db, "transactions"), orderBy("created", "desc"));
+    onSnapshot(q, (querSnap) => {
+      let count = 0;
+
+      querSnap.forEach((doc) => {
+        tempExpense = count;
+        if (count < 2) tempData.push({ id: doc.id, ...doc.data() });
+        count++;
+        //console.log(JSON.stringify(doc.data()));
+      });
+    }); */
+    /*
     const querySnapSHot = await getDocs(collection(db, "transactions"));
+    let count = 0;
     querySnapSHot.forEach((doc) => {
       tempExpense += Number(doc.data()["amount"]);
       tempData.push({ id: doc.id, ...doc.data() });
-    });
-    setExpenses(tempExpense);
-    setRefreshing(false);
-    setTransactions(tempData);
+      count++;
+    }); */
+
+    /*const transRef = collection(db, "transactions");
+
+    const q = query(transRef, orderBy("created", "desc"), limit(4));
+    onSnapshot(q, (querSnap) => {
+      querSnap.forEach((doc) => {
+        tempExpense += Number(doc.data()["amount"]);
+        tempData.push({ id: doc.id, ...doc.data() });
+        //console.log(JSON.stringify(doc.data()));
+      });
+    }); */
   };
 
   return (
@@ -198,6 +294,7 @@ export default function HomeScreen({ navigation }) {
       >
         <ScrollView
           horizontal
+          style={{ backgroundColor: "white", marginBottom: 10 }}
           disableIntervalMomentum={true}
           showsHorizontalScrollIndicator={false}
           snapToInterval={metrics.screenWidth}

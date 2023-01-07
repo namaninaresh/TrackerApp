@@ -14,7 +14,7 @@ import { auth } from "../../firebase";
 import { size } from "../../theme/fonts";
 import UserContext from "../context/UserContext";
 const CustomSidebarMenu = (props) => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   return (
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
@@ -74,7 +74,8 @@ const CustomSidebarMenu = (props) => {
                     // AsyncStorage.clear();
                     signOut(auth)
                       .then(() => {
-                        props.navigation.replace("Auth");
+                        setUser(null);
+                        // props.navigation.replace("Auth");
                       })
                       .catch((error) => {
                         console.log(error);

@@ -25,12 +25,13 @@ import { getAuth } from "firebase/auth";
 import UserProvider from "./components/context/UserProvider";
 import AccountScreen from "./components/Screens/AccountScreen";
 import AllTransactionScreen from "./components/Screens/AllTransactionScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
 
-const Auth = () => {
+const AuthStack = () => {
   // Stack Navigator for Login and Sign up Screen
   return (
     <Stack.Navigator initialRouteName="LoginScreen">
@@ -58,123 +59,133 @@ const Auth = () => {
   );
 };
 
+const AppStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="SplashScreen">
+      {/* SplashScreen which will come once for 5 Seconds */}
+      <Stack.Screen
+        name="SplashScreen"
+        component={SplashScreen}
+        // Hiding header for Splash Screen
+        options={{ headerShown: false }}
+      />
+
+      {/* Navigation Drawer as a landing page */}
+      <Stack.Screen
+        name="DrawerNavigationRoutes"
+        component={DrawerNavigationRoutes}
+        // Hiding header for Navigation Drawer
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        // Hiding header for Navigation Drawer
+        options={({ navigation }) => {
+          return {
+            headerMode: "float",
+            headerLeft: () => (
+              <NavigationStackHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader
+                navigation={navigation}
+                props={props}
+                name="Edit Profile "
+              />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+      <Stack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
+        // Hiding header for Navigation Drawer
+        options={({ navigation }) => {
+          return {
+            headerMode: "float",
+            headerLeft: () => (
+              <NavigationStackHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader
+                navigation={navigation}
+                props={props}
+                name="Settings "
+              />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+
+      <Stack.Screen
+        name="AllTransactions"
+        component={AllTransactionScreen}
+        // Hiding header for Navigation Drawer
+        options={({ navigation }) => {
+          return {
+            headerMode: "float",
+            headerLeft: () => (
+              <NavigationStackHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader
+                navigation={navigation}
+                props={props}
+                name="All Transactions "
+              />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+
+      <Stack.Screen
+        name="AccountScreen"
+        component={AccountScreen}
+        // Hiding header for Navigation Drawer
+        options={({ navigation }) => {
+          return {
+            headerMode: "float",
+            headerLeft: () => (
+              <NavigationStackHeader navigationProps={navigation} />
+            ),
+            // headerLeft: () => <HeaderLeft navigation={navigation} />,
+            headerTitle: (props) => (
+              <PageHeader
+                navigation={navigation}
+                props={props}
+                name="Accounts"
+              />
+            ),
+            //headerRight: () => <HeaderRight navigation={navigation} />,
+          };
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const App = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    try {
+      AsyncStorage.getItem("Auth_Token")
+        .then((response) => setUser(response))
+        .catch((err) => console.log("err", err));
+    } catch (error) {}
+  }, []);
   return (
     <SafeAreaProvider>
       <UserProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="SplashScreen">
-            {/* SplashScreen which will come once for 5 Seconds */}
-            <Stack.Screen
-              name="SplashScreen"
-              component={SplashScreen}
-              // Hiding header for Splash Screen
-              options={{ headerShown: false }}
-            />
-            {/* Auth Navigator: Include Login and Signup */}
-            <Stack.Screen
-              name="Auth"
-              component={Auth}
-              options={{ headerShown: false }}
-            />
-            {/* Navigation Drawer as a landing page */}
-            <Stack.Screen
-              name="DrawerNavigationRoutes"
-              component={DrawerNavigationRoutes}
-              // Hiding header for Navigation Drawer
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfileScreen}
-              // Hiding header for Navigation Drawer
-              options={({ navigation }) => {
-                return {
-                  headerMode: "float",
-                  headerLeft: () => (
-                    <NavigationStackHeader navigationProps={navigation} />
-                  ),
-                  // headerLeft: () => <HeaderLeft navigation={navigation} />,
-                  headerTitle: (props) => (
-                    <PageHeader
-                      navigation={navigation}
-                      props={props}
-                      name="Edit Profile "
-                    />
-                  ),
-                  //headerRight: () => <HeaderRight navigation={navigation} />,
-                };
-              }}
-            />
-            <Stack.Screen
-              name="SettingsScreen"
-              component={SettingsScreen}
-              // Hiding header for Navigation Drawer
-              options={({ navigation }) => {
-                return {
-                  headerMode: "float",
-                  headerLeft: () => (
-                    <NavigationStackHeader navigationProps={navigation} />
-                  ),
-                  // headerLeft: () => <HeaderLeft navigation={navigation} />,
-                  headerTitle: (props) => (
-                    <PageHeader
-                      navigation={navigation}
-                      props={props}
-                      name="Settings "
-                    />
-                  ),
-                  //headerRight: () => <HeaderRight navigation={navigation} />,
-                };
-              }}
-            />
-
-            <Stack.Screen
-              name="AllTransactions"
-              component={AllTransactionScreen}
-              // Hiding header for Navigation Drawer
-              options={({ navigation }) => {
-                return {
-                  headerMode: "float",
-                  headerLeft: () => (
-                    <NavigationStackHeader navigationProps={navigation} />
-                  ),
-                  // headerLeft: () => <HeaderLeft navigation={navigation} />,
-                  headerTitle: (props) => (
-                    <PageHeader
-                      navigation={navigation}
-                      props={props}
-                      name="All Transactions "
-                    />
-                  ),
-                  //headerRight: () => <HeaderRight navigation={navigation} />,
-                };
-              }}
-            />
-
-            <Stack.Screen
-              name="AccountScreen"
-              component={AccountScreen}
-              // Hiding header for Navigation Drawer
-              options={({ navigation }) => {
-                return {
-                  headerMode: "float",
-                  headerLeft: () => (
-                    <NavigationStackHeader navigationProps={navigation} />
-                  ),
-                  // headerLeft: () => <HeaderLeft navigation={navigation} />,
-                  headerTitle: (props) => (
-                    <PageHeader
-                      navigation={navigation}
-                      props={props}
-                      name="Accounts"
-                    />
-                  ),
-                  //headerRight: () => <HeaderRight navigation={navigation} />,
-                };
-              }}
-            />
-          </Stack.Navigator>
+          {user ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
       </UserProvider>
     </SafeAreaProvider>

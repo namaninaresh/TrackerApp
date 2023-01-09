@@ -219,7 +219,7 @@ const Child1 = () => (
 );
 
 export default function HomeScreen({ navigation }) {
-  const { user } = useContext(UserContext);
+  // const { user } = useContext(UserContext);
   const [totalExpenses, setExpenses] = useState(0);
   const [transactions, setTransactions] = useState();
 

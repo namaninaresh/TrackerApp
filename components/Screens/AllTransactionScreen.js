@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex: 1,
     marginTop: 10,
+    paddingBottom: 100,
     width: metrics.screenWidth,
   },
   icon: {

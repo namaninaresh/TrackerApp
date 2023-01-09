@@ -22,14 +22,15 @@ import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
 import { useContext } from "react";
 import UserContext from "../context/UserContext";
+import AuthContext from "../context/AuthContext";
 function capitalFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const { user } = useContext(UserContext);
-
+  const { user } = useContext(AuthContext);
+  //console.log("breof", user);
   return (
     <Layout>
       <View style={styles.container}>
@@ -44,7 +45,7 @@ export default function ProfileScreen() {
           <View style={styles.headerContainer}>
             <View style={styles.userIconContainer}>
               <Image
-                source={require("../../assets/user.jpg")}
+                source={require("../../assets/man_2.png")}
                 style={styles.userIcon}
               />
             </View>
@@ -181,16 +182,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.ash1,
     borderRadius: 60,
-    height: 100,
+    height: 90,
     justifyContent: "center",
-    width: 100,
+    width: 90,
     marginHorizontal: 10,
     marginRight: 20,
   },
   userIcon: {
     borderRadius: 50,
-    height: 80,
-    width: 80,
+    height: 70,
+    width: 70,
   },
   usertitle: {
     fontWeight: "800",

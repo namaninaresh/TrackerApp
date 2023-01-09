@@ -13,8 +13,10 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { size } from "../../theme/fonts";
 import UserContext from "../context/UserContext";
+import AuthContext from "../context/AuthContext";
 const CustomSidebarMenu = (props) => {
-  const { user, setUser } = useContext(UserContext);
+  const { signOut } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   return (
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
@@ -71,15 +73,16 @@ const CustomSidebarMenu = (props) => {
                 {
                   text: "Confirm",
                   onPress: () => {
+                    signOut();
                     // AsyncStorage.clear();
-                    signOut(auth)
+                    /* signOut(auth)
                       .then(() => {
                         setUser(null);
                         // props.navigation.replace("Auth");
                       })
                       .catch((error) => {
                         console.log(error);
-                      });
+                      }); */
                   },
                 },
               ],

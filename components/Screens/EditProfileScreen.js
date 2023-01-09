@@ -28,15 +28,18 @@ import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import UserContext from "../context/UserContext";
 import InfoModal from "../atoms/InfoModal";
+import AuthContext from "../context/AuthContext";
 
 export default function EditProfileScreen() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(AuthContext);
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
-  //const user = getAuth().currentUser;
+
+  const { updateUser } = useContext(AuthContext);
+
   let { displayName, email } = user;
 
   const [inputs, setInputs] = useState({
@@ -101,8 +104,9 @@ export default function EditProfileScreen() {
         displayName: inputs.fullname,
       })
         .then(() => {
+          updateUser({ ...user, displayName: inputs.fullname });
+          //setUser({ ...user, displayName: inputs.fullname });
           setLoading(false);
-          setUser({ ...user, displayName: inputs.fullname });
           setModalVisible(!modalVisible);
         })
         .catch((error) => {

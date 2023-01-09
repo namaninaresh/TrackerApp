@@ -6,7 +6,7 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
@@ -17,7 +17,10 @@ import { auth } from "../../firebase";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import AuthContext from "../context/AuthContext";
+
 export default function Login({ navigation }) {
+  const { signIn } = React.useContext(AuthContext);
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -54,27 +57,7 @@ export default function Login({ navigation }) {
       setLoading(false);
 
       try {
-        signInWithEmailAndPassword(auth, inputs.email, inputs.password)
-          .then((response) => {
-            AsyncStorage.setItem(
-              "Auth_Token",
-              response._tokenResponse.refreshToken
-            );
-            navigation.replace("DrawerNavigationRoutes");
-            /*sessionStorage.setItem(
-              "Auth_Token",
-              response._tokenResponse.refreshToken
-            ); */
-          })
-          .catch((error) => {
-            console.log("error", error);
-            if (error.code === "auth/wrong-password") {
-              handleError("Wrong Password ! Try again", "password");
-            }
-            if (error.code === "auth/user-not-found") {
-              handleError("User not found ", "email");
-            }
-          });
+        signIn(inputs.email, inputs.password);
 
         //AsyncStorage.setItem("user",JSON.stringify(inputs))
         //navigate

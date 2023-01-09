@@ -5,15 +5,12 @@ import {
   Keyboard,
   Alert,
   StyleSheet,
+  TouchableWithoutFeedback,
 } from "react-native";
-import { createRef, forwardRef, useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  updateProfile,
-} from "firebase/auth";
+import { useEffect, useState } from "react";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
@@ -22,19 +19,27 @@ import colors from "../../theme/colors";
 import metrics from "../../theme/metrics";
 import { size, weight } from "../../theme/fonts";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
-import { auth, db } from "../../firebase";
-import { Layout } from "../Layout/Layout";
+import { db } from "../../firebase";
 import InfoModal from "../atoms/InfoModal";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
 export default function AddTransactionScreen({ navigation }) {
   const [inputs, setInputs] = useState({
     title: "",
     amount: 0,
     description: "",
+    date: new Date(),
+    dateTimeText: {
+      date: "",
+      time: "",
+    },
+    // date: new Date().toLocaleDateString("IST"),
   });
-
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showDate, setShowDate] = useState(false);
+  const [mode, setMode] = useState("date");
 
   const validate = () => {
     Keyboard.dismiss();
@@ -72,7 +77,7 @@ export default function AddTransactionScreen({ navigation }) {
           amount: inputs.amount,
           description: inputs.description,
           title: inputs.title,
-          created: Timestamp.now(),
+          created: inputs.date,
         });
         setModalVisible(true);
         setInputs({
@@ -93,6 +98,55 @@ export default function AddTransactionScreen({ navigation }) {
 
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+
+  useEffect(() => {
+    //fetchData();
+    const unsubscribe = navigation.addListener("focus", () => {
+      handleChange(new Date(), "date");
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || inputs.date;
+
+    let datTime = setDateTime(currentDate);
+    setInputs((prevState) => ({
+      ...prevState,
+      date: currentDate,
+      dateTimeText: { date: datTime[0], time: datTime[1] },
+    }));
+    setShowDate(!showDate);
+  };
+
+  const setDateTime = (currentDate = inputs.date) => {
+    let tempDate = new Date(currentDate);
+
+    let date = tempDate.getDate();
+    let m = tempDate.getMonth() + 1;
+
+    if (date < 10) date = "0" + date;
+    if (m < 10) m = "0" + m;
+
+    let fDate = date + "/" + m + "/" + tempDate.getFullYear();
+
+    //dateTimeText.date = fDate;
+
+    let hr = tempDate.getHours();
+    let min = tempDate.getMinutes();
+    if (min < 10) min = "0" + min;
+    let ampm = "am";
+    if (hr > 12) {
+      hr -= 12;
+      ampm = "pm";
+    }
+    if (hr < 10) hr = "0" + hr;
+    let fTime = hr + ":" + min + " " + ampm;
+    //dateTimeText = fTime;
+
+    return [fDate, fTime];
   };
 
   return (
@@ -131,8 +185,69 @@ export default function AddTransactionScreen({ navigation }) {
             }}
             onChangeText={(text) => handleChange(text, "description")}
           />
-        </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginVertical: 10,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                alignItems: "center",
+                backgroundColor: "#fff",
+                padding: 10,
 
+                borderRadius: 10,
+                flexDirection: "row",
+              }}
+              onPress={() => {
+                setMode("date");
+                setShowDate(!showDate);
+              }}
+            >
+              <MaterialIcons name="date-range" size={24} color="black" />
+              <Text
+                style={{
+                  padding: 5,
+                }}
+              >
+                {inputs.dateTimeText.date}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                alignItems: "center",
+                backgroundColor: "#fff",
+                padding: 10,
+
+                borderRadius: 10,
+                flexDirection: "row",
+              }}
+              onPress={() => {
+                setMode("time");
+                setShowDate(!showDate);
+              }}
+            >
+              <MaterialIcons name="timer" size={24} color="black" />
+              <Text style={{ padding: 5 }}>{inputs.dateTimeText.time}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        {showDate && (
+          <DateTimePicker
+            mode={mode}
+            is24Hour={false}
+            value={inputs.date}
+            onChange={onDateChange}
+          />
+        )}
+        {/* <DateTimePicker
+          mode="date"
+          value={new Date()}
+          onChange={(text) => console.log("date=", text)}
+        /> */}
         <Button
           text="Add Transaction"
           type="primary"

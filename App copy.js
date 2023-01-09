@@ -16,28 +16,21 @@ import DrawerNavigationRoutes from "./components/Navigation/DrawerNavigator";
 import Register from "./components/Screens/RegisterScreen";
 import { Layout } from "./components/Layout/Layout";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Text, Button, View, ActivityIndicator } from "react-native";
+import { Text, Button } from "react-native";
 import EditProfileScreen from "./components/Screens/EditProfileScreen";
 import SettingsScreen from "./components/Screens/SettingsScreen";
 import { NavigationStackHeader } from "./components/Navigation/NavigationDrawerHeader";
 import PageHeader from "./components/atoms/PageHeader";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import UserProvider from "./components/context/UserProvider";
 import AccountScreen from "./components/Screens/AccountScreen";
 import AllTransactionScreen from "./components/Screens/AllTransactionScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AuthContext from "./components/context/AuthContext";
-import { auth, db } from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
-import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
+
 const AuthStack = () => {
   // Stack Navigator for Login and Sign up Screen
   return (
@@ -68,7 +61,7 @@ const AuthStack = () => {
 
 const AppStack = () => {
   return (
-    <Stack.Navigator initialRouteName="DrawerNavigationRoutes">
+    <Stack.Navigator initialRouteName="SplashScreen">
       {/* SplashScreen which will come once for 5 Seconds */}
       <Stack.Screen
         name="SplashScreen"
@@ -179,192 +172,88 @@ const AppStack = () => {
 };
 
 const App = () => {
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [userToken, setUserToken] = useState(null);
-  // const [user, setUser] = useState(null);
-
-  const initialLoginState = {
-    user: null,
-    isLoading: true,
-    userName: null,
-    userToken: null,
-  };
-
-  const loginReducer = (prevState, action) => {
-    switch (action.type) {
-      case "RETRIEVE_TOKEN":
-        return {
-          ...prevState,
-          user: action.user,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case "LOGIN":
-        return {
-          ...prevState,
-          user: action.user,
-          userToken: action.token,
-          userName: action.id,
-          isLoading: false,
-        };
-      case "LOGOUT":
-        return {
-          ...prevState,
-          user: null,
-          userToken: null,
-          userName: null,
-          isLoading: false,
-        };
-      case "REGISTER":
-        return {
-          ...prevState,
-          user: action.user,
-          userToken: action.token,
-          userName: action.id,
-          isLoading: false,
-        };
-      case "UPDATEUSER":
-        return {
-          ...prevState,
-          user: action.user,
-          isLoading: false,
-        };
-    }
-  };
-
-  const [loginState, dispatch] = React.useReducer(
-    loginReducer,
-    initialLoginState
-  );
-
-  const authContext = React.useMemo(() => ({
-    signIn: (email, password) => {
-      let userToken = null;
-      try {
-        signInWithEmailAndPassword(auth, email, password)
-          .then((response) => {
-            userToken = response._tokenResponse.accessToken;
-            AsyncStorage.setItem(
-              "@Auth_Token",
-              response._tokenResponse.refreshToken
-            );
-            console.log("lgoin", response);
-            dispatch({ type: "LOGIN", id: email, token: userToken });
-          })
-          .catch((error) => {
-            console.log("error", error);
-            if (error.code === "auth/wrong-password") {
-              // handleError("Wrong Password ! Try again", "password");
-            }
-            if (error.code === "auth/user-not-found") {
-              // handleError("User not found ", "email");
-            }
-          });
-      } catch (error) {
-        console.log("error while signin", error);
-      }
-    },
-
-    signOut: async () => {
-      console.log("singout");
-      //setUserToken(null);
-      // setIsLoading(false);
-      try {
-        await AsyncStorage.removeItem("@Auth_Token");
-      } catch (error) {
-        console.log(e);
-      }
-      dispatch({ type: "LOGOUT" });
-    },
-    signUp: () => {
-      setUserToken("newUser");
-      setIsLoading(false);
-    },
-
-    updateUser: (newUser) => {
-      console.log("uupdate", newUser);
-      dispatch({ type: "UPDATEUSER", user: newUser });
-    },
-  }));
-
-  const isLoggedIn = async () => {
-    let userToken = null;
-    try {
-      userToken = await AsyncStorage.getItem("@Auth_Token");
-
-      const tempDoc = [];
-      getAuth().onAuthStateChanged(async (user) => {
-        const snapshot = await getDocs(collection(db, "accounts"));
-        snapshot.forEach((doc) => {
-          tempDoc.push({ ...doc.data() });
-        });
-        dispatch({
-          type: "RETRIEVE_TOKEN",
-          token: userToken,
-          user: { ...user, accounts: tempDoc },
-        });
-      });
-    } catch (error) {
-      console.log(error);
-    }
-
-    /*try {
-      setIsLoading(true);
-      let userToken = await AsyncStorage.getItem("@Auth_Token");
-      console.log("islogiged", userToken);
-      setUserToken(userToken);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(`isLoggged in Eror ${error}`);
-    } */
-  };
-
-  // useEffect(() => {
-  //   const tempDoc = [];
-  //   const unregisterAUthobserver = getAuth().onAuthStateChanged(
-  //     async (user) => {
-  //       const snapshot = await getDocs(collection(db, "accounts"));
-  //       snapshot.forEach((doc) => {
-  //         tempDoc.push({ ...doc.data() });
-  //       });
-  //       if (user)
-  //         setUser({
-  //           ...user,
-  //           pending: false,
-  //           isSignedIn: !!user,
-  //           accounts: tempDoc,
-  //         });
-  //     }
-  //   );
-
-  //   return () => unregisterAUthobserver();
-  // }, []);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    setTimeout(async () => {
-      isLoggedIn();
-      //dispatch({ type: "RETRIEVE_TOKEN", token: "reterere" });
-      // setIsLoading(false);
-    }, 1000);
+    try {
+      AsyncStorage.getItem("Auth_Token")
+        .then((response) => setUser(response))
+        .catch((err) => console.log("err", err));
+    } catch (error) {}
   }, []);
-
-  if (loginState.isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} />
-      </View>
-    );
-  }
   return (
     <SafeAreaProvider>
-      <ExpoStatusBar />
-      <AuthContext.Provider value={{ user: loginState.user, ...authContext }}>
+      <UserProvider>
         <NavigationContainer>
-          {loginState.userToken === null ? <AuthStack /> : <AppStack />}
+          {user ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
-      </AuthContext.Provider>
+      </UserProvider>
     </SafeAreaProvider>
   );
 };
+
+function Home(props) {
+  return (
+    <Layout>
+      <Text>Home</Text>
+      <Button
+        title="PRess"
+        onPress={() => props.navigation.navigate("Profile")}
+      />
+    </Layout>
+  );
+}
+function Profile() {
+  return (
+    <Layout>
+      <Text>Profile</Text>
+    </Layout>
+  );
+}
+function Settings() {
+  return (
+    <Layout>
+      <Text>Settings</Text>
+    </Layout>
+  );
+}
+function Feed() {
+  return (
+    <Layout>
+      <Text>Feed</Text>
+    </Layout>
+  );
+}
+function Notifications() {
+  return (
+    <Layout>
+      <Text>Notifications</Text>
+    </Layout>
+  );
+}
+
+function HomeTabs() {
+  return (
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Feed" component={Feed} />
+      <Tab.Screen name="Notifications" component={Notifications} />
+    </Tab.Navigator>
+  );
+}
+
+function Apps() {
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeTabs} />
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Settins" component={Settings} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  );
+}
 
 export default App;

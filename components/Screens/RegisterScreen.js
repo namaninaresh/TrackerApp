@@ -22,7 +22,14 @@ import Loader from "../atoms/Loader";
 import colors from "../../theme/colors";
 import metrics from "../../theme/metrics";
 import { size, weight } from "../../theme/fonts";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  Timestamp,
+  getDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { auth, db } from "../../firebase";
 
 export default function Register({ navigation }) {
@@ -85,28 +92,25 @@ export default function Register({ navigation }) {
             await updateProfile(response.user, {
               displayName: inputs.fullname,
             });
-            await sendEmailVerification(response.user, actionCodeSettings);
-            AsyncStorage.setItem(
-              "Auth_Token",
-              response._tokenResponse.refreshToken
-            );
+            //await sendEmailVerification(response.user, actionCodeSettings);
+            AsyncStorage.setItem("Auth_Token", response._tokenResponse.idToken);
+
+            setDoc(doc(db, "users", response.user.uid), {
+              username: inputs.email,
+              password: inputs.password,
+              fullname: inputs.fullname,
+              created: Timestamp.now(),
+            });
           }
           //await sendEmailVerification(response.user, actionCodeSettings)
           //response.__tokenResponse.refreshToken
           // console.log("Verification email sent", response);
         );
 
-        addDoc(collection(db, "users"), {
-          username: inputs.email,
-          password: inputs.password,
-          fullname: inputs.fullname,
-
-          created: Timestamp.now(),
-        });
-
         //AsyncStorage.setItem("user",JSON.stringify(inputs))
         //navigate
       } catch (error) {
+        console.error(error);
         Alert.alert("Error", "Something is wrong");
       }
     }, 3000);

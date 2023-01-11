@@ -219,7 +219,6 @@ const Child1 = () => (
 );
 
 export default function HomeScreen({ navigation }) {
-  // const { user } = useContext(UserContext);
   const [totalExpenses, setExpenses] = useState(0);
   const [transactions, setTransactions] = useState();
 
@@ -227,7 +226,7 @@ export default function HomeScreen({ navigation }) {
     //fetchData();
 
     const unsubscribe = navigation.addListener("focus", () => {
-      fetchData();
+      // fetchData();
     });
 
     return unsubscribe;
@@ -288,9 +287,9 @@ export default function HomeScreen({ navigation }) {
     <Layout>
       <ScrollView
         style={{ paddingBottom: 100 }}
-        refreshControl={
+        /*refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
-        }
+        } */
       >
         <ScrollView
           horizontal

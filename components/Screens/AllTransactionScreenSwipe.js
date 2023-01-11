@@ -6,10 +6,15 @@ import {
   View,
   Animated,
 } from "react-native";
+import * as React from "react";
+
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import colors from "../../theme/colors";
 import { size } from "../../theme/fonts";
 import Loader from "../atoms/Loader";
 import metrics from "../../theme/metrics";
+
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Layout } from "../Layout/Layout";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useContext, useEffect, useState } from "react";
@@ -125,13 +130,154 @@ const transData = [
     title: "Auto to hnk bus stand",
   },
 ];
-export default function AllTransactionScreen({ navigation }) {
+export default function AllTransactionScreenSwipe({ navigation }) {
   //const [transactions, setTransactions] = useState();
   const [filterModal, setfilterModal] = useState(false);
 
-  const { allData, addTransaction, deleteTransaction } =
-    useContext(UserContext);
+  const { allData, addTransaction } = useContext(UserContext);
   const [refreshing, setRefreshing] = useState(allData["loading"]);
+
+  let row = [];
+  let prevOpenedRow;
+
+  const SPACING = 20;
+  const AVATAR_SIZE = 70;
+  const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
+  const scrollY = React.useRef(new Animated.Value(0)).current;
+
+  /**
+   *
+   */
+  const renderItem = ({ item, index }, onClick) => {
+    const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)];
+    const opacityInputRange = [
+      -1,
+      0,
+      ITEM_SIZE * index,
+      ITEM_SIZE * (index + 0.5),
+    ];
+    const scale = scrollY.interpolate({
+      inputRange,
+      outputRange: [1, 1, 1, 0],
+    });
+    const opacity = scrollY.interpolate({
+      inputRange: opacityInputRange,
+      outputRange: [1, 1, 1, 0],
+    });
+
+    //
+    const closeRow = (index) => {
+      console.log("closerow");
+      if (prevOpenedRow && prevOpenedRow !== row[index]) {
+        prevOpenedRow.close();
+      }
+      prevOpenedRow = row[index];
+    };
+
+    const renderRightActions = (progress, dragX, onClick) => {
+      return (
+        <View
+          style={{
+            margin: 0,
+            alignContent: "center",
+            justifyContent: "center",
+            width: 70,
+          }}
+        >
+          <Button color="red" onPress={onClick} title="DELETE"></Button>
+        </View>
+      );
+    };
+
+    return (
+      <GestureHandlerRootView>
+        <Swipeable
+          renderRightActions={(progress, dragX) =>
+            renderRightActions(progress, dragX, onClick)
+          }
+          onSwipeableOpen={() => closeRow(index)}
+          leftThreshold={80}
+          rightThreashold={40}
+          ref={(ref) => (row[index] = ref)}
+          rightOpenValue={-100}
+        >
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              padding: SPACING,
+
+              marginBottom: SPACING,
+              backgroundColor: "rgba(255,255,255,0.8)",
+
+              borderRadius: 12,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 0,
+              },
+              opacity,
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 1,
+              transform: [{ scale }],
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontWeight: "800" }}>{item.title}</Text>
+              <Text style={{ fontWeight: "900" }}>{item.amount}</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingVertical: 10,
+                opacity: 0.5,
+              }}
+            >
+              <Text style={{ fontWeight: "100", fontSize: size.font10 }}>
+                {item["created"] && timeConverter(item["created"])}
+                {/*{//Date.parse(item.created.toDate().toString())} */}
+              </Text>
+              <Text
+                style={{
+                  fontWeight: "800",
+                  fontSize: size.font10,
+                  color: colors.orange,
+                }}
+              >
+                Debicted
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: size.font10,
+                paddingBottom: 10,
+                opacity: 0.3,
+                letterSpacing: 0.2,
+              }}
+            >
+              {item.description}
+            </Text>
+          </Animated.View>
+        </Swipeable>
+      </GestureHandlerRootView>
+    );
+  };
+
+  const deleteItem = ({ item, index }) => {
+    console.log(item, index);
+    let a = listData;
+    a.splice(index, 1);
+    console.log(a);
+    setListData([...a]);
+  };
   useEffect(() => {
     //fetchData();
   }, []);
@@ -165,15 +311,6 @@ export default function AllTransactionScreen({ navigation }) {
     */
   };
 
-  const deleteItem = ({ item, index }) => {
-    // console.log(item, index);
-    deleteTransaction({ item, index });
-    //let a = JSON.parse(JSON.stringify(allData.transactions));
-    // a.splice(index, 1);
-    // console.log(a);
-    // console.log([...a]);
-  };
-
   return (
     <>
       <Loader visible={refreshing} />
@@ -182,6 +319,8 @@ export default function AllTransactionScreen({ navigation }) {
           <View
             style={{
               marginHorizontal: 10,
+              borderRadius: 10,
+              backgroundColor: "white",
             }}
           >
             <View
@@ -190,8 +329,6 @@ export default function AllTransactionScreen({ navigation }) {
                 justifyContent: "space-between",
                 paddingHorizontal: 20,
                 paddingVertical: 25,
-                borderRadius: 10,
-                backgroundColor: "white",
               }}
             >
               <Text
@@ -201,7 +338,7 @@ export default function AllTransactionScreen({ navigation }) {
                   color: colors.ash7,
                 }}
               >
-                All Transactions
+                All Transactions Swipe
               </Text>
               <Icon
                 name="filter-variant"
@@ -215,25 +352,33 @@ export default function AllTransactionScreen({ navigation }) {
               onSubmit={submitFilter}
             />
 
-            <FlatList
+            <Animated.FlatList
+              data={allData.transactions}
+              onScroll={Animated.event(
+                [
+                  {
+                    nativeEvent: { contentOffset: { y: scrollY } },
+                  },
+                ],
+                { useNativeDriver: true }
+              )}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              renderItem={(v) =>
+                renderItem(v, () => {
+                  console.log("Pressed", v);
+                  deleteItem(v);
+                })
+              }
+            />
+            {/* <FlatList
               data={allData.transactions}
               showsHorizontalScrollIndicator={false}
               showsVerticalScrollIndicator={false}
-              renderItem={({ item, index }) => (
-                <TransactionItem
-                  item={item}
-                  index={index}
-                  key={index}
-                  onClick={() => {
-                    //console.log("Pressed", item, index);
-                    deleteItem({ item, index });
-                  }}
-                />
+              renderItem={({ item }, index) => (
+                <TransactionItem item={item} key={index} />
               )}
-              contentContainerStyle={{
-                padding: 5,
-              }}
-            />
+            /> */}
           </View>
         </View>
       </Layout>

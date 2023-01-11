@@ -6,6 +6,7 @@ import {
   Alert,
   StyleSheet,
   TouchableWithoutFeedback,
+  FlatList,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
@@ -18,10 +19,20 @@ import Loader from "../atoms/Loader";
 import colors from "../../theme/colors";
 import metrics from "../../theme/metrics";
 import { size, weight } from "../../theme/fonts";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  Timestamp,
+  getDocs,
+  updateDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import InfoModal from "../atoms/InfoModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Picker } from "@react-native-picker/picker";
+import Filter from "../atoms/Filter";
 
 export default function AddTransactionScreen({ navigation }) {
   const [inputs, setInputs] = useState({
@@ -29,9 +40,10 @@ export default function AddTransactionScreen({ navigation }) {
     amount: 0,
     description: "",
     date: new Date(),
+    bank: "lJcDgLCKJHLq0EgQNg1G",
     dateTimeText: {
-      date: "",
-      time: "",
+      date: null,
+      time: null,
     },
     // date: new Date().toLocaleDateString("IST"),
   });
@@ -40,6 +52,20 @@ export default function AddTransactionScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [showDate, setShowDate] = useState(false);
   const [mode, setMode] = useState("date");
+  const [listData, setListData] = useState(null);
+
+  useEffect(() => {
+    // fetchData();
+  }, [listData]);
+
+  const fetchData = async () => {
+    const tempData = [];
+    const querySnapSHot = await getDocs(collection(db, "accounts"));
+    querySnapSHot.forEach((doc) => {
+      tempData.push({ id: doc.id, ...doc.data() });
+    });
+    setListData(tempData);
+  };
 
   const validate = () => {
     Keyboard.dismiss();
@@ -77,17 +103,33 @@ export default function AddTransactionScreen({ navigation }) {
           amount: inputs.amount,
           description: inputs.description,
           title: inputs.title,
+          bank: inputs.bank,
           created: inputs.date,
         });
+        const accountShot = await getDoc(doc(db, "accounts", inputs.bank));
+        const accountData = accountShot.data();
+
+        updateDoc(doc(db, "accounts", inputs.bank), {
+          amount: Number(accountData["amount"]) - Number(inputs.amount),
+        })
+          .then(() => console.log("updatedDOc"))
+          .catch((err) => console.log(err));
         setModalVisible(true);
         setInputs({
           title: "",
           amount: 0,
           description: "",
+          date: new Date(),
+          bank: "lJcDgLCKJHLq0EgQNg1G",
+          dateTimeText: {
+            date: null,
+            time: null,
+          },
         });
         //AsyncStorage.setItem("user",JSON.stringify(inputs))
         //navigate
       } catch (error) {
+        console.warn(error);
         Alert.alert("Error", "Something is wrong");
       }
     }, 3000);
@@ -212,7 +254,7 @@ export default function AddTransactionScreen({ navigation }) {
                   padding: 5,
                 }}
               >
-                {inputs.dateTimeText.date}
+                {inputs.dateTimeText.date || setDateTime()[0]}
               </Text>
             </TouchableOpacity>
 
@@ -231,8 +273,36 @@ export default function AddTransactionScreen({ navigation }) {
               }}
             >
               <MaterialIcons name="timer" size={24} color="black" />
-              <Text style={{ padding: 5 }}>{inputs.dateTimeText.time}</Text>
+              <Text style={{ padding: 5 }}>
+                {inputs.dateTimeText.time || setDateTime()[1]}
+              </Text>
             </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginVertical: 10,
+              backgroundColor: "#fff",
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              borderRadius: 10,
+              paddingRight: 20,
+            }}
+          >
+            <MaterialIcons name="account-balance" size={24} color="black" />
+            <Picker
+              selectedValue={"lJcDgLCKJHLq0EgQNg1G"}
+              style={{ height: 50, width: "100%" }}
+              onValueChange={(itemValue) => console.log(itemValue)}
+            >
+              {listData &&
+                listData.map((ele) => {
+                  return (
+                    <Picker.Item label={ele.name} value={ele.id} key={ele.id} />
+                  );
+                })}
+            </Picker>
           </View>
         </View>
         {showDate && (

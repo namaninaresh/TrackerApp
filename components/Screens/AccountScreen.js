@@ -117,7 +117,7 @@ export default function AccountScreen() {
   const [listData, setListData] = useState(null);
 
   useEffect(() => {
-    fetchData();
+    //fetchData();
   }, [listData]);
 
   const fetchData = async () => {

@@ -26,14 +26,22 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import UserProvider from "./components/context/UserProvider";
 import AccountScreen from "./components/Screens/AccountScreen";
 import AllTransactionScreen from "./components/Screens/AllTransactionScreen";
+import AllTransactionScreenSwipe from "./components/Screens/AllTransactionScreenSwipe";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AuthContext from "./components/context/AuthContext";
 import { auth, db } from "./firebase";
 import { collection, getDocs } from "firebase/firestore";
 import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
+import UserContext from "./components/context/UserContext";
+import {
+  ADD_BANK,
+  DELETE_TRANS,
+  GET_ALLTRANSACTIONS,
+  reducer,
+} from "./components/Reducers/userReducer";
+import TransactionsScreen from "./components/Screens/TransactionsScreen";
 
 const Stack = createStackNavigator();
 
@@ -189,6 +197,12 @@ const App = () => {
     userName: null,
     userToken: null,
   };
+  const initialState = {
+    transactions: [],
+    accounts: [],
+    loading: true,
+    error: null,
+  };
 
   const loginReducer = (prevState, action) => {
     switch (action.type) {
@@ -236,6 +250,10 @@ const App = () => {
     loginReducer,
     initialLoginState
   );
+  const [transactionState, dispatchTrans] = React.useReducer(
+    reducer,
+    initialState
+  );
 
   const authContext = React.useMemo(() => ({
     signIn: (email, password) => {
@@ -267,8 +285,6 @@ const App = () => {
 
     signOut: async () => {
       console.log("singout");
-      //setUserToken(null);
-      // setIsLoading(false);
       try {
         await AsyncStorage.removeItem("@Auth_Token");
       } catch (error) {
@@ -287,13 +303,35 @@ const App = () => {
     },
   }));
 
+  const transContextMethods = React.useMemo(() => ({
+    addTransaction: () => {
+      dispatchTrans({
+        type: ADD_BANK,
+        payload: {
+          amount: "500",
+          description: "Test with Context",
+          id: "cFOT0a1plT6rzRawjHlp1243",
+          title: "TextContext Added",
+        },
+      });
+      console.log("adding Transaction");
+    },
+    deleteTransaction: ({ item, index }) => {
+      console.log("delete Transaction", index);
+      dispatchTrans({
+        type: DELETE_TRANS,
+        payload: item,
+      });
+    },
+  }));
+
   const isLoggedIn = async () => {
     let userToken = null;
     try {
       userToken = await AsyncStorage.getItem("@Auth_Token");
 
       const tempDoc = [];
-      getAuth().onAuthStateChanged(async (user) => {
+      /*getAuth().onAuthStateChanged(async (user) => {
         const snapshot = await getDocs(collection(db, "accounts"));
         snapshot.forEach((doc) => {
           tempDoc.push({ ...doc.data() });
@@ -303,6 +341,17 @@ const App = () => {
           token: userToken,
           user: { ...user, accounts: tempDoc },
         });
+      }); */
+      const user = { displayName: "Chinna", email: "vloe@gma.com" };
+      dispatch({
+        type: "RETRIEVE_TOKEN",
+        token: userToken,
+        user: {
+          ...user,
+          accounts: [
+            { name: "paytm", amount: 1000, type: "bank", id: "23232fdf" },
+          ],
+        },
       });
     } catch (error) {
       console.log(error);
@@ -343,7 +392,7 @@ const App = () => {
   useEffect(() => {
     setTimeout(async () => {
       isLoggedIn();
-      //dispatch({ type: "RETRIEVE_TOKEN", token: "reterere" });
+      dispatchTrans({ type: "GETALL" });
       // setIsLoading(false);
     }, 1000);
   }, []);
@@ -359,9 +408,15 @@ const App = () => {
     <SafeAreaProvider>
       <ExpoStatusBar />
       <AuthContext.Provider value={{ user: loginState.user, ...authContext }}>
-        <NavigationContainer>
-          {loginState.userToken === null ? <AuthStack /> : <AppStack />}
-        </NavigationContainer>
+        <UserContext.Provider
+          value={{ allData: transactionState, ...transContextMethods }}
+        >
+          <NavigationContainer>
+            {/* {<TransactionsScreen />} */}
+            {/*<AllTransactionScreenSwipe /> */}
+            {loginState.userToken === null ? <AuthStack /> : <AppStack />}
+          </NavigationContainer>
+        </UserContext.Provider>
       </AuthContext.Provider>
     </SafeAreaProvider>
   );

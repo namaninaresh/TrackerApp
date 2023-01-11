@@ -158,13 +158,3 @@ const AppStack = () => (
     />
   </Stack.Navigator>
 );
-
-export default Router = () => {
-  const { user } = useContext(UserContext);
-  console.log(user);
-  return (
-    <NavigationContainer>
-      {user ? <AppStack /> : <AuthStack />}
-    </NavigationContainer>
-  );
-};

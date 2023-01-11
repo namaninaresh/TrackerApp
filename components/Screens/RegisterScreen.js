@@ -95,12 +95,12 @@ export default function Register({ navigation }) {
             //await sendEmailVerification(response.user, actionCodeSettings);
             AsyncStorage.setItem("Auth_Token", response._tokenResponse.idToken);
 
-            setDoc(doc(db, "users", response.user.uid), {
+            /* setDoc(doc(db, "users", response.user.uid), {
               username: inputs.email,
               password: inputs.password,
               fullname: inputs.fullname,
               created: Timestamp.now(),
-            });
+            }); */
           }
           //await sendEmailVerification(response.user, actionCodeSettings)
           //response.__tokenResponse.refreshToken
